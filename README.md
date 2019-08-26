@@ -7,7 +7,7 @@
 + 邮箱 : [perfectxlx@gmail.com](perfectxlx@gmail.com)	
 + GitHub : [https://github.com/XielinX](https://github.com/XielinX "github")
 + 求职意向 : Java开发工程师
-+ 期望薪资 : `?`
++ 期望薪资 : 3K~6K
 ## 工作经历
 + 2018.06-2019.05		     富士康科技集团	                       岗位 : 系统维护
   + 主要负责生产系统维护,生产数据维护
@@ -48,7 +48,7 @@
 **源码**: [https://github.com/XielinX/majiang](https://github.com/XielinX/majiang "github")
 
 ### smbms
-**项目介绍** : 自己做的项目,主要是基于 Maven 管理的 SSM 架构,实现基本的 CRUD,登录拦截,密码加密, 数据分页处理等功能
+**项目介绍** :  主要是基于 Maven 管理的 SSM 架构,实现基本的 CRUD,登录拦截,密码加密, 数据分页处理等功能 
 
 **使用技术** : `Spring`, `Springmvc`,` Mybatis`, `Maven`, `Log4j`,`Thymeleaf`/`JSP` , `Mysql`, `JavaScript`, `jQuery`, `Layer`
 
@@ -66,7 +66,6 @@
 /**
  * 1年工作经验,从事系统数据维护方面;
  * Java自学,希望从事于互联网行业
- * 离职原因,为美好生活&对编程感兴趣 
  * 有良好的责任意识，乐于助人;
  * 良好的团队合作精神,能承受一定的工作压力；
  * 平时注重团队精神，有一定的逻辑思维能力、沟通能力及 解决问题的能力.
@@ -77,9 +76,3 @@ String phone = new String(b);
 ```
 ## 致谢
 感谢您花时间阅读我的简历，期待能有机会和您共事。
-## 寄语
-*希望每一个人都能善良,都能被善待.......*
-*生活不易,且行且珍惜........*
-*可能我真的很菜,培训机构的请不要打扰,谢谢!*
-
-
