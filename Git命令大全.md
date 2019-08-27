@@ -11,7 +11,7 @@
 + `touch <filename>`:新增文件, touch  hello.txt
 ###  配置命令 **git config**
 + `--global`: 参数是全局参数，也就是这些命令在这台电脑的所有Git仓库下都有用。
-### **git**基础命令
+## **git**基础命令
 + `git init`:将一个文件夹初始化为一个git本地仓库
 + `git add <file>`:添加
   + **git add readme.txt**:添加一个*readme.txt*文件到暂存区(缓存)
@@ -21,6 +21,7 @@
   + 自动把所有**已经跟踪过**的文件暂存 起来一并提交从而跳过 git add 步骤.没有-m会打开编
   + 辑 器要你添加注释信息
 + `git clone [url]`:从url里下载
+### 状态status
 + `git status`:查看你上次提交之后是否有修改(输出详细内容)
   + 可以为`git status`命令设置别名,设置方法:
   + `git config --global alias.st status`,以后简写 `git st`	
@@ -46,7 +47,7 @@
 + `git rm --cached <file>`:把暂存区的文件删除,变成未追踪状态     
   + 如果把文件从暂存区域移除，但仍然希望保留在当前工作目录中，换句话说，仅是从跟踪清单中删除，使用 `--cached` 选项即可
 
-+ ~~`git rm -r *`~~: ??????????
++ `git rm -r -n *: ??????????
   + 递归删除，即如果后面跟的是一个目录做为参数，则会递归删除整个目录中的所有子目录和文件
 + `git mv <source> <destination>`:用于移动或重命名一个文件、目录、软连接。
   + 在工作区和暂存区移动或重命名,\<destination\>不为目录名,执行重命名,为目录名,执行移动
@@ -59,7 +60,7 @@
 + `git fetch`: 从远程仓库**获取**最新版本到本地仓库,不会自动merge
 + `git merge`: 用于从指定的commit(s)合并到当前分支,用来合并两个分支
 
-## Git分支管理[^branch]
+### Git分支管理[^branch]
 [^branch]:git分支,缺省状态下默认当前分支为'master',未合并前各个分支文件不相干
 1. 创建分支
   + `git branch`:列出本地分支
@@ -72,7 +73,7 @@
   + `git merge branchname`: 合并分支
   + 合并冲突:合并并不仅仅是简单的文件添加、移除的操作，Git 也会合并修改。
 
-## Git查看提交历史
+### 历史
 + `git log`:查看历史记录
 + `git log --oneline`:查看历史记录(简洁,主要是提交信息)
 + `git log --oneline --graph`:查看历史记录(开启了拓扑图)
@@ -80,7 +81,7 @@
 + `git log --author=<authorname> --oneline -n`:查看指定用户的提交日志,**-n**:显示记录条数,n=1,2,3...
 + `git log --oneline --before={3.weeks.ago} --after={2019-03-01} --no-merges`:三周前且在3月1日之后的所有提交,no-merges:隐藏合并提交
 + 更多 git log 命令可查看：<http://git-scm.com/docs/git-log>
-## Git标签
+### Git标签tag
 1. 创建标签
   + `git tag`:查看所有标签
   + `git tag -a <tagname> -m '注解'`:创建一个带有注解信息的标签,
