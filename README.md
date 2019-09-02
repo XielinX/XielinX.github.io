@@ -39,7 +39,7 @@
   + `Linux`系统基础
   + `Git`/`SVN`的使用
   + `Markdown`的使用
-  + `Tomca`t的使用
+  + `Tomcat`的使用
 ## 个人开源项目
 ### majian
 **项目描述** : 仿Elastic中文社区的模式项目,提问,回答,评论,消息通知
@@ -71,8 +71,8 @@
  * 平时注重团队精神，有一定的逻辑思维能力、沟通能力及 解决问题的能力.
  */
 //解码
-byte[] b = java.util.Base64.getDecoder().decode("MTczNTA4NTI5Mjc=");
-String phone = new String(b);
+byte[] byte = java.util.Base64.getDecoder().decode("MTczNTA4NTI5Mjc=");
+String phone = new String(byte);
 ```
 ## 致谢
 感谢您花时间阅读我的简历，期待能有机会和您共事。
