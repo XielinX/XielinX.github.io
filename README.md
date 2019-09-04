@@ -24,12 +24,13 @@
 + 前端技能 
   + 掌握` JavaScript`, `jQuery`, `JSON`, `Ajax` 的使用
   + 熟悉 `BootStrap`, 了解` LayUI`/`Layer`前端框架
-  + 掌握 `Thymeleaf` 模板运用 
+  + 掌握 `Thymeleaf`,`Jsp`
 + 框架技能 
   + 熟悉`Spring` 
   + 熟悉` SpringMVC`,`Mybatis`,`Shiro`
   + 熟悉 `Maven` 管理
-  + 了解 `SpringBoot`,`MybatisPlus`
+  + 熟悉 `SpringBoot`
+  + 了解`MybatisPlus`
 + 数据库技能 
   + 掌握`Mysql`
   + 熟悉`Oracle`
@@ -38,7 +39,7 @@
   + `Linux`系统基础
   + `Git`/`SVN`的使用
   + `Markdown`的使用
-  + `Tomca`t的使用
+  + `Tomcat`的使用
 ## 个人开源项目
 ### majian
 **项目描述** : 仿Elastic中文社区的模式项目,提问,回答,评论,消息通知
@@ -48,8 +49,7 @@
 **源码**: [https://github.com/XielinX/majiang](https://github.com/XielinX/majiang "github")
 
 ### smbms
-**项目介绍** :  主要是基于 Maven 管理的 SSM 架构,实现基本的 CRUD,登录拦截,密码加密, 数据分页处理等功能 
-
+**项目介绍** :  主要是基于 Maven 管理的 SSM 架构,实现基本登录拦截,密码加密, 数据分页处理等功能
 **使用技术** : `Spring`, `Springmvc`,` Mybatis`, `Maven`, `Log4j`,`Thymeleaf`/`JSP` , `Mysql`, `JavaScript`, `jQuery`, `Layer`
 
 **源码** : [https://gitee.com/XielinXG/smbms](https://gitee.com/XielinXG/smbms "gitee")
@@ -71,8 +71,8 @@
  * 平时注重团队精神，有一定的逻辑思维能力、沟通能力及 解决问题的能力.
  */
 //解码
-byte[] b = java.util.Base64.getDecoder().decode("MTczNTA4NTI5Mjc=");
-String phone = new String(b);
+byte[] byte = java.util.Base64.getDecoder().decode("MTczNTA4NTI5Mjc=");
+String phone = new String(byte);
 ```
 ## 致谢
 感谢您花时间阅读我的简历，期待能有机会和您共事。
