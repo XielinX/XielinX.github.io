@@ -1,8 +1,9 @@
 # Nginx[^nginx]
-[^nginx]: HTTP和反向代理服务器，邮件代理服务器TCP/UDP代理服务器功能
-## Nginx特性
-+ 简单耐操
-## Nginx安装
+[^nginx]: (engine x)HTTP和反向代理服务器，邮件代理服务器TCP/UDP代理服务器功能
+## 第一章
+### 1.1 Nginx特性
+Nginx是一款轻量级的Web 服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器，在BSD-like 协议下发行。其特点是占有内存少，并发能力强
+### 1.2 Nginx安装
 + 官网: [https://nginx.org/en/download.html](https://nginx.org/en/download.html "nginx")
 + 版本Version
   + Mainline version:主力版本,就是开发版本
@@ -50,5 +51,35 @@ nginx -s stop   # 停止 Nginx
 nginx -s quit  #正常关闭服务
 ```
 11) 启动后测试(浏览器也行)`curl http://localhost:8080`
-12) 
+#### Linux系统安装
++ 安装包
+  + nginx-1.16.1.tar.gz
+  + pcre-8.42.tar.gz 
+  + oppenssl-1.0.1.tar.gz
+  + zlib-1.2.8.tar.gz
++ 安装
+  + 第一步 pcre-8.42.tar.gz 
+  1) 解压, ==[root@localhost opt]#== `tar -xzvf pcre-8.42.tar.gz`
+  2) 运行脚本, ==[root@localhost pcre-8.42]#== `./configure`
+  3) 编译并安装, ==[root@localhost pcre-8.42]#==` make && make install`
+  4) 查看安装版本,==[root@localhost pcre-8.42]#== `pcre-config  --version`
+  
+  + 第二步 oppenssl-1.0.1.tar.gz
+  + 第三步 zlib-1.2.8.tar.gz
+  1) yum命令 `yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel`
+  2) 一键安装4个 `yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel`
+  
+  + 第四步 安装nginx
+  1) 解压  ,==[root@localhost opt]#== `tar -zxvf nginx-1.16.0.tar.gz`
+  2) 执行脚本, ==[root@localhost nginx]#==
+## 第二章
+### 2.1 Nginx简介
++ 高性能的HTTP和反向代理的Web服务器,俄罗斯毛子开发的
+### 2.2 Nginx的反向代理
++ 正向代理
+在客户端(浏览器)配置代理服务器,通过代理服务器进行互联网访问
 
++ 反向代理
+
+### 2.3 Nginx的负载均衡
+### 2.4 Nginx的动静分离
