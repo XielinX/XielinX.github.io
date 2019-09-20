@@ -25,17 +25,16 @@ session	|
 global-session	|
 
 + bean的生命周期
-> 1. 实例化,(构造方法,创建对象)
-> 2. 装配,(可选,为属性赋值)
-> 3. 回调,(可选)
-> 4. 初始化,(init_method方法)
-> 5. 就绪,(使用)
-> 6. 销毁(destroy方法)
-
+  1. 实例化,(构造方法,创建对象)
+  2. 装配,(可选,为属性赋值)
+  3. 回调,(可选)
+  4. 初始化,(init_method方法)
+  5. 就绪,(使用)
+  6. 销毁(destroy方法)
 + 依赖注入/Dependence Inject
-> 1. 概念:给bean注入属性的值 
-> **注入方式**:
-> ①setter方法注入
+ 1. 概念:给bean注入属性的值 
+ 2. **注入方式**:
+   + ①setter方法注入
 ```xml
 <bean id="" class="">
 	<property name="属性" value="属性值"></property>
@@ -85,15 +84,14 @@ global-session	|
 > 5. autodetect – 如果找到默认的构造函数，使用“自动装配用构造”; 否则，使用“按类型自动装配”
 
 + spring的注解
-	+ spring的EL表达式
-	> 属性上注解@value(#{...})
-	> 
-+ `@Component`:类的自动扫描组件,相当于xml里设置`<bean name=""/>`
-+ `@Repository`: 表示在持久层DAO组件。
-+ `@Service`: 表示在业务层服务组件。
-+ `@Controller`: 表示在表示层控制器组件
-+ `@Autowired`: byType,和`@Qualified`一起使用(spring框架的)
-+ `@Resources`: byName,未找到再byType(java的Annotation包)
+  + spring的EL表达式
+    + `@value(#{...})`:配置文件值
+    + `@Component`:类的自动扫描组件,相当于xml里设置`<bean name=""/>`
+    + `@Repository`: 表示在持久层DAO组件。
+    + `@Service`: 表示在业务层服务组件。
+    + `@Controller`: 表示在表示层控制器组件
+    + `@Autowired`: byType,和`@Qualified`一起使用(spring框架的)
+    + `@Resources`: byName,未找到再byType(java的Annotation包)
 
 #### IOC[^ioc]
 

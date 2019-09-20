@@ -122,7 +122,7 @@ session.invalidate();
 > forward: 转发，*数据*:,转发页面,转发到的 页面都能获取;*地址栏*:不会显示url链接地址,安全效率高;使用场景:一般时用户登录时候
 > redirect: 跳转，*数据*:不传递request对象;*地址栏*:会显示url链接地址,不安全,效率低;使用场景:一般注销登录时返回其他页面
 
-+ Get请求与Request请求
++ Get请求与Post请求
 > Get:从服务器上获取获取资源,将数据放在URL后面?key1=value1?key2=value2在地址栏显示数据敏感,url长度受限(1024kb),使用MIME类型application/x-www-form-urlencoded的URL编码(百分号编码)
 > Post:向服务器提交数据,将数据放在http协议的请求头或消息体中,地址栏不显示,安全,url长度不受限,可大量传输数据
 > 使用场景:
