@@ -105,11 +105,6 @@ nginx -s quit  #正常关闭服务
 #user  nobody;
 worker_processes  1;
 
-#error_log  logs/error.log;
-#error_log  logs/error.log  notice;
-#error_log  logs/error.log  info;
-
-#pid        logs/nginx.pid;
 #第二部分:events块
 events {
     worker_connections  1024; #支持的最大连接数
@@ -118,12 +113,6 @@ events {
 http {
     include       mime.types;
     default_type  application/octet-stream;
-
-    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-    #                  '$status $body_bytes_sent "$http_referer" '
-    #                  '"$http_user_agent" "$http_x_forwarded_for"';
-
-    #access_log  logs/access.log  main;
 
     sendfile        on;
     #tcp_nopush     on;
@@ -137,86 +126,25 @@ http {
         listen       80;
         server_name  localhost;
 
-        #charset koi8-r;
-
-        #access_log  logs/host.access.log  main;
-
         location / {
             root   html;
             index  index.html index.htm;
         }
-
-        #error_page  404              /404.html;
-
-        # redirect server error pages to the static page /50x.html
-        #
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   html;
-        }
-
-        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
-        #
-        #location ~ \.php$ {
-        #    proxy_pass   http://127.0.0.1;
-        #}
-
-        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
-        #
-        #location ~ \.php$ {
-        #    root           html;
-        #    fastcgi_pass   127.0.0.1:9000;
-        #    fastcgi_index  index.php;
-        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
-        #    include        fastcgi_params;
-        #}
-
-        # deny access to .htaccess files, if Apache's document root
-        # concurs with nginx's one
-        #
-        #location ~ /\.ht {
-        #    deny  all;
-        #}
     }
-
-
-    # another virtual host using mix of IP-, name-, and port-based configuration
-    #
-    #server {
-    #    listen       8000;
-    #    listen       somename:8080;
-    #    server_name  somename  alias  another.alias;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
-
-
-    # HTTPS server
-    #
-    #server {
-    #    listen       443 ssl;
-    #    server_name  localhost;
-
-    #    ssl_certificate      cert.pem;
-    #    ssl_certificate_key  cert.key;
-
-    #    ssl_session_cache    shared:SSL:1m;
-    #    ssl_session_timeout  5m;
-
-    #    ssl_ciphers  HIGH:!aNULL:!MD5;
-    #    ssl_prefer_server_ciphers  on;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
-
 }
 ```
+### location指令
++ 用于匹配url
++ 语法
+```shell
+location [= | ~ | ~* | ^~] uri{ }
+```
+
++ `=` :  
+## 第章Nginx的反向代理
++ 正向代理
+在客户端(浏览器)配置代理服务器,通过代理服务器进行互联网访问
++ 反向代理
 ## 第章 Nginx实例
 ### 反向代理
 #### 示例1
@@ -236,8 +164,8 @@ http {
             proxy_pass  http://127.0.0.1:8080;
             index  index.html index.htm;
         }
-``` 
-  
+```
+
   + 浏览器访问 www.123.com
 #### 示例2
 + 实现效果
@@ -245,15 +173,93 @@ http {
   + 访问http://127.0.0.1:9001/edu/ 跳转到127.0.0.1:8080 
   + 访问http://127.0.0.1:9001/vod/ 跳转到127.0.0.1:8081
 + 实现
-  + 2个Tomcat服务器,port1=8080,port2=8081   
-## 第章
-### 2.1 Nginx简介
-+ 高性能的HTTP和反向代理的Web服务器,俄罗斯毛子开发的
-### 2.2 Nginx的反向代理
-+ 正向代理
-在客户端(浏览器)配置代理服务器,通过代理服务器进行互联网访问
+  + 2个Tomcat服务器,port1=8080,port2=8081
+```shell
+server {
+        listen       9001;
+        server_name 192.168.1.128;
 
-+ 反向代理
+         # proxy_pass 转发
+         # ~/xx/ 正则匹配 xx 
+        location ~ /edu/ {
+            proxy_pass  http://127.0.0.1:8080;
+        }
 
-### 2.3 Nginx的负载均衡
-### 2.4 Nginx的动静分离
+        location ~ /vod/ {
+            proxy_pass  http://127.0.0.1:8081;
+        }
+    }
+
+```
++ 问题
+  + 防火墙我只开放了8080,80,22端口为什么9001也能访问?  
+## 第章 Nginx简介
++ 高性能的HTTP和反向代理的Web服务器,俄罗斯开发的
+
+## 第章 Nginx的负载均衡
+### 定义
+### 示例
++ 效果
+  + 浏览器地址栏输入http://192.168.1.128:9001/edu/a.html, 负载均衡效果,平均到8080,8081中 
++ 实现
+```shell
+#http块加入方法
+http{
+#负载均衡方法
+upstream myserver{
+  server  192.168.1.128:8080;
+  server  192.168.1.128:8081; 
+  }
+
+server {
+  listen       80;
+  server_name  192.168.1.128;
+  location / {
+    proxy_pass  http://myserver; #转发
+    root   html;  
+    index  index.html index.htm;
+        }
+   }
+}
+```
+### 负载均衡机制
+#### 轮询(默认)
++ 定义
+  + 每个请求按照时间顺序逐一分配到不同的后端服务器,如果服务器宕掉,能自动剔除服务器
+#### 加权(Weighted)
++ 设置服务器的请求数,权值越大分配的越多,默认weight=1
+```shell
+upstream myserver{
+#假设5个请求,3个请求将定向到8080
+server 192.168.1.127:8080 weight = 3;
+#一个请求将定向到8081
+server 192.168.1.128:8081;
+#另一个请求将定向到8082
+server 192.168.1.129:8082;
+}
+```
+### 最少连接的(Least connected)
++ 不使繁忙的服务器因过多请求而过载,将新的请求分配给不太繁忙的服务器
++ 访问时间最短时,优先分配(fair)
++  minimum_conn指令激活
+```shell
+upstream myserver{
+minimum_conn;
+server 192.168.1.127:8080;
+server 192.168.1.128:8081;
+server 192.168.1.129:8082;
+}
+```
+### 会话持久性(ip-hash)
++ 使用轮循或者最少连接的负载平衡,后续的请求不能保证还是分配到原先的服务器上
++ 使用ip-hash，客户端的IP地址用作哈希密钥，以确定应为客户端的请求选择服务器组中的哪个服务器
++ ip-hash指令激活
+```shell
+upstream myserver{
+ip_hash;
+server 192.168.1.127:8080;
+server 192.168.1.128:8081;
+server 192.168.1.129:8082;
+}
+```
+## 第章Nginx的动静分离
