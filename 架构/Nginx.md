@@ -263,3 +263,28 @@ server 192.168.1.129:8082;
 }
 ```
 ## 第章Nginx的动静分离
+### 示例
++ 加入一张图片和一个html文件
+  + 路径
+    + `/data/images/01.png`
+    + `/data/www/a.html`  
++ 测试
+  + http://192.168.1.128/images/  
+```shell
+http{
+  server{
+    listen       80;
+    server_name  192.168.1.128;
+    #
+    location /www/ {
+      root   /data/; 
+      index  index.html index.htm;
+        }
+    #静态资源    
+    location /images/ {
+      root  /data/;
+      autoindex  on; # 开启文件路径,否则返回403 Forbidden
+      }
+  }
+}
+```
