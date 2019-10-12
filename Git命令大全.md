@@ -91,6 +91,7 @@
 + branch:git分支,缺省状态下默认当前分支为'master',未合并前各个分支文件不相干
 ### 查看分支
 + `git branch`:列出本地分支
++ `git branch -v`:列出分支和最后一次提交
 ### 创建分支
 + `git branch (branch_name)`:手动创建分支,如:git branch  dev
 + `git checkout (branch_name)`:切换分支
