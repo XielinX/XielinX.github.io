@@ -97,7 +97,8 @@
 + `git checkout (branch_name)`:切换分支
 + `git checkout -b (branch_name)`:创建新分支并立即切换到该分支下
 ### 删除分支
-+ `git branch -d (branch_name)`:删除分支
++ `git branch -d (branch_name)`:删除本地分支
++ `git push [alias] --delete branch_name` : 删除远程分支
 ### 合并分支
 + `git merge branch_name`: 合并分支
 + 合并冲突:合并并不仅仅是简单的文件添加、移除的操作，Git 也会合并修改。
@@ -144,18 +145,16 @@
 + `git remote add [alias] [url]`:添加一个新的远程仓库
 > [alias]: 远程仓库别名  [url]: 链接地址
 
-### 从本地推送至远程仓库(**远程库更新**)
+### 推送
 + `git push [alias] [branch]`
 > 将你的[branch]分支推送成为[alias]远程仓库上的[branch]分支
 > [alias]:远程仓库的别名, [branch]: 分支,?????????/
 
-### 从远程抓取至本地(**本地更新**)
-#### 分段抓取
+### 拉取
 + `git fetch [alias]`:从远程下载最新分支与数据(本地还未同步)
 + `git merge [alias]/[branch]`:将服务器上的**更新**合并到你的当前分支
 > [alias]:远程库别名, [branch]: 分支,?????
 
-#### 自动抓取合并 
 + `git pull [alias] [branch]`:提取远程仓库到本地,自动merge
 > git pull = git fetch + git merge
 > `fatal: refusing to merge unrelated histories`:拒绝合并不相关的历史
@@ -187,6 +186,50 @@
 > \<destination repository\>:克隆到另一个地方路径,该路径必须是未创建,或已创建但为空(即一个空文件夹),不然克隆会失败
 > 如:git clone d:/git1   e:/git2   解释:将D盘下的git1目录克隆到E盘下的git2目录下
 
+## 变基
+### merge
+> 主分支master,开发分支dev,现在要把dev分支合并到主分支上
+> 使用 git merge dev (当前分支为master),会把dev分支合并到master
+> merge将两个分支的最新快照合并
+
+### rebase
++ `git rebase [basebranch]  [topicbranch]` : 无需切换分支
+  + `git checkout topicbranch` :切换到topic分支
+  + `git rebase basebranch` : 变基到主分支base上
+
+原理:
+git checkout dev (先切换为当前分支dev)
+git rebase master 
+找到两个分支(当前分支dev,基底分支master)的最近共同祖先,
+对比当前分支相对于祖先分支的的历史提交,提取相应的修改保存为临时文件,
+将当前分支指向目标基底分支
+切换到基底分支(git checkout master),快进合并分支dev, git merge dev
+
+#### 特性rebase
+<img src="D:\JAVA\XielinX.github.io\git-shortcut\rebase1.png" alt="特性" title="案例图片"  />
+
++ 一、将 client 中的修改合并到主分支并发布，但暂时并不想合并 server 中的修改
++ `git rebase --onto master server client` 
+  > 取出 client 分支，找出处于 client 分支和 server 分支的共同祖先之后的修改
+  > 然 后把它们在 master 分支上重放一遍”。 这理解起来有一点复杂，不过效果非常酷。
+
++ 快进合并到主分支(合并client)
+  + `git checkout master` (切换到master分支)
+  + `git merge client` (合并client分支到master分支上去)
+![rebase2](D:\JAVA\XielinX.github.io\git-shortcut\rebase2.png)
+
++ 合并server分支
+  
+  + `git rebase master server` : 省去先切换到server分支,然后rebase操作
+<img src="D:\JAVA\XielinX.github.io\git-shortcut\r3.png" alt="r3" style="zoom: 80%;" />
+
++ 快进合并到主分支(合并server)
+  + `git checkout master`
+  + `git merge server`
+![r4](D:\JAVA\XielinX.github.io\git-shortcut\r4.png)
+
+#### 变基风险
++ **不要对在你的仓库外有副本的分支执行变基。** 
 
 ### git commit, git push, git pull, git fetch, git merge 含义与区别
 + `git commit`: 将本地修改过的文件提交到本地仓库去
