@@ -10,17 +10,17 @@
 + `touch <filename>`:新增文件, touch  hello.txt
 ## 二、 配置命令 **git config**
 ### 3个配置路径
-#### C 盘用户目录下
+#### C 盘用户目录下(系统)
 + `~/.gitignore`文件: 只针对当前用户
 + `--global` :读取此配置
 > 参数是全局参数，也就是这些命令在这台电脑的所有Git仓库下都有用。
 > git config  --gobal  user.name  "zhang"
 > git config  --gobal  user.email  12@qq.com
 
-#### git安装目录下
+#### git安装目录下(全局)
 + `/etc/gitconfig`文件: 包含系统上每一个用户及他们仓库的通用配置
 + `--system`:读取此配置
-#### 本地git仓库目录下
+#### 本地git仓库目录下(本地)
 + `.git/config`文件
 + 不加选项,只针对该仓库不加,就是某个仓库指定特别的用户和邮箱
 ### 编辑器配置
@@ -265,3 +265,30 @@ git config --global alias.unstage 'reset HEAD --'
 # git last = git log -1 HEAD
 git config --global alias.last 'log -1 HEAD'
 ```
+## GitHub
+### 账户创建和配置
++ 注册: [ https://github.com]( https://github.com "github官网")
+### 项目贡献
+#### 派生(fork)项目
+如果你想要参与某个项目，但是并没有推送权限，这时可以对这个项目进行“派生”。 派生的意思是 指，GitHub 将在你的空间中创建一个完全属于你的项目副本，且你对其具有推送权限
+
++ <kbd>Fork</kbd>
+### Markdown
++ 表情符号
+  + 语法: `:<表情名称>:`
++ 表情:
+I :eyes: that :bug: and I :cold_sweat:.
+:trophy: for :microscope: it.
+:+1: and :sparkles: on this :ship:, it's :fire::poop:!
+:clap::tada::panda_face:  
+### README文件
++ 很多团队在这个文件里放版本库或项目新人需要了解的所有相关的信息。 它一般包含这些内容： 
+  + 该项目的作用 
+  + 如何配置与安装
+  + 有关如何使用和运行的例子 
+  + 项目的许可证
+  + 如何向项目贡献力量 
+## 脚本GitHub
+### 钩子
++ `Webhooks & Services`项设置
+### GitHub API 
