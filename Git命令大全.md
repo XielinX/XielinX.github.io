@@ -135,6 +135,10 @@
 
 + `git push [alias] [tagname]`
 + `git push [alias] --tags` : 把所有不在远程仓库 服务器上的标签全部传送到那里。
+### 生成一个构建号
++ 只适用于有注解的标签（即使用 -a 或 -s 选项创建的标签），
++ `git describe master`
+  + `v1.6.2-rc1-20-g8c5b85c` 
 ### 检出标签
 ## 七、远程仓库Github
 ### 远程仓库查看
