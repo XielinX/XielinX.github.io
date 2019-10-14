@@ -1,64 +1,70 @@
-## 项目介绍
-一直想做一个有权限分配的的项目
-## 使用技术
-#### 前端
-+ Layer
-+ Thymeleaf
+# Apache Shiro
+## 一、 简介
+`Apache Shiro` 是一个强大而灵活的开源安全框架，它干净利落地处理身份认证，授权，企业会话管理和加密。 
 
-#### 后端
-+ SpringBoot
-+ SpringMVC
-+ Mybatis/plus
-+ Shiro
-+ Maven
-+ Lombok
-+ OkHttp3
-+ MySQL
-+ Git
+以下是你可以用`Apache Shiro` 所做的事情 :
 
-## 项目结构
++ 验证用户来核实他们的身份 
++ 对用户执行访问控制，如：
+  + 判断用户是否被分配了一个确定的安全角色 
+  + 判断用户是否被允许做某事 
++ 在任何环境下使用 `Session API`，即使没有 `Web` 或 `EJB` 容器
++ 在身份验证，访问控制期间或在会话的生命周期，对事件作出反应
++ 聚集一个或多个用户安全数据的数据源，并作为一个单一的复合用户“视图”
++ 启用单点登录（`SSO`）功能
++ 为没有关联到登录的用户启用`Remember Me`服务
++ 其他
+## Shiro结构
++ Subject : 主体,用户
++ Realms : 域,类似DAO,获取数据源信息进行认证,授权
++ SecurityManger : 安全管理器,shiro的核心
++ **Authentication** : 身份认证或登录
++ **Authorization** : 授权,授予权限才能访问
++ **Session Management** : 用户会话管理
++ **Cryptography** : 加密数据
++ CacheManager : 缓存管理
+## Shiro quickstart demo
+1. pom文件配置
 ```xml
+<!--shiro core-->
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-core</artifactId>
+    <version>1.4.1</version>
+</dependency>
 
+<!--shiro spring-->
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-spring</artifactId>
+    <version>1.4.1</version>
+</dependency>
 ```
-## 项目演示
 
-## 工作记录
-#### 2019年7月11日
-+ 设计数据库
-+ 项目环境搭建
-+ `entity`,`dao`,`mapper`,`controller?`层文件自动生成
-+ 单元测试
-+ 业务编程
-#### 2019年7月12日
-+ **RBAC:基于角色/资源的访问控制**
-> 基于角色/role
+2. shiro配置
+```ini
+[users]
+admin=123456
+```
+3. ShiroTest.java测试
 ```java
-//假设只有项目组长monitor角色,才有权限查看核心代码
-if(user.hasRole("monitor)){
-  //do something
+public void loginTest(){
+// 1.创建SecurityManager的工厂,这里使用 init文件初始化
+Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("shiro.ini");
+// 2.获得SecurityManager的实例,并绑定给SecurityUtils
+SecurityManager securityManager = factory.getInstance();
+SecurityUtils.setSecurityManager(securityManager);
+// 3.
+Subject subject = SecurityUtils.getSubject();
+// 登录
+String username = "admin";
+String password = "123456";
+UsernamePasswordToken token = new UsernamePasswordToken(username,password);
+try{
+subject.login(token);
+}catch(...){}
+// exceptions
 }
-//现在需求变更,项目经理manager角色也能查看
-if(user.hasRole("monitor") || user.haoRole("manager")){
-  //do something
-}
-//可以看出,如果角色频繁变更,代码判断逻辑也要频繁的修改
+// 断言认证成功
+Assert.assertEquals(true,subject.isAuthenticated());
 ```
-
-> 基于资源 /resource
-```java
-//权限判断与角色无关,只判断是否拥有该字符权限
-if(user.hasPermission("project:core:view")){
-  //do something
-}
-/*这样用户权限变更,只需修改数据库中用户对应角色的权限,而权限与对应的资源通常不需改变
- * 基于资源方式,仍然需要角色,用户权限分配依据角色(例如:admin角色,同时会有CRUD权限)
- * 访问控制时,不判断角色,只关心是否拥有该权限,有就可访问
- * /
-```
-
-+ 表结构 
-+ 环境搭建
-  + IDEA编程 
-  + 先完成基本自动生成
-  + 再学习JWT
-  + 前端不使用,使用PostMan测试
