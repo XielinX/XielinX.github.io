@@ -1,18 +1,16 @@
 # Java随笔
-## JVM
-### 指令集
-### 寄存器
-### 类文件的格式
-### 栈
-### 垃圾回收堆
-### 存储区
-## 面向对象
-## Annotation
+## 一、 面向对象(oop)
+### 1.0 理解
+### 1.1 特征
+#### 继承
+#### 多态
+#### 封装
+## 二、Annotation
 jdk5增加元数据(MetaData))的支持,也就是Annotation(注解),代码里的特殊标记
 这些标记可以在编译,类加载,运行时被读取
 
 可以修饰于包,类,构造器,方法,接口,成员变量,参数,局部变量的声明
-### 基本Annotation
+### 2.1 基本Annotation
 #### @Override
 + 表示重写父类方法
 #### @Depreciated
@@ -56,7 +54,7 @@ public interface Funinterface{
 void test();
 } 
 ```
-### 元Annotation
+### 2.2 元Annotation
 #### @Retention
 + 只能修饰一个Annotation
 + 用于指定被修饰的Annotation可以保留多长时间
@@ -139,7 +137,7 @@ public class Base{}
 // 继承至Base类,但也具有@testable功能
 public class MyTest extends Base{}
 ```
-### 自定义Annotation
+### 2.3 自定义Annotation
 + 使用`@interface`定义
 + `default`指定成员变量默认值
 
@@ -166,5 +164,12 @@ public class User{
   private Integer age;
 }
 ```
-### 提取Annotation信息
+### 2.4 提取Annotation信息
 
+## 三、JVM
+### 指令集
+### 寄存器
+### 类文件的格式
+### 栈
+### 垃圾回收堆
+### 存储区
