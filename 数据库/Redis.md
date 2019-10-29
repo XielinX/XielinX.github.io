@@ -51,7 +51,7 @@
 ### 列表(List): List\<E\>
 + `lpush key value1,value2...`: 将一个或多个值插入到列表头部,倒序输出
 + `rpush key value1,value2...`:在列表中添加一个或多个值,按正常顺序进出
-+ `lrange key start end`:集合输出,**lpush的倒序输出**(类似栈先进后出) 0:第一个;1:第二个;-1:最后一个;-2:倒数第二个
++ `lrange key start end`:集合输出,**lpush元素倒序输出**(类似栈先进后出) ,start/end: 0:第一个;1:第二个;-1:最后一个;-2:倒数第二个
 + `lpop key`: 移出并获取列表的**第一个元素**
 + `rpop key`:移除列表的**最后一个元素**，返回值为移除的元素
 + `lindex key index`: 按照列表key的索引index取出元素

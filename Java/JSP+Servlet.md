@@ -4,7 +4,7 @@
 + **生命周期**:一个servlet被创建到被销毁的过程.一个servlet只会有一个对象,服务于所有请求.(单例,减少开销)
 	1. 实例化(使用构造方法创建对象)
 	2. 初始化,执行init方法 (该方法在整个生命周期里只会执行一次)
-	3. 服务 ,请求时执行service方法
+	3. 服务 ,请求时执行service方法,doGet()/doPost()
 	4. 销毁,执行destroy方法(tomcat服务器停止时,调用此方法)
 + **创建servlet的三种方式**:
 	1. 实现Servlet接口
@@ -127,7 +127,7 @@ session.invalidate();
 > Post:向服务器提交数据,将数据放在http协议的请求头或消息体中,地址栏不显示,安全,url长度不受限,可大量传输数据
 > 使用场景:
 > post:修改,创建,文件上传,下载
-> get:删除,
+> get:删除,查询
 
 + MVC的各个部分都有那些技术来实现?如何实现?
 > MVC 是Model－View－Controller的简写。”Model” 代表的是应用的业务逻辑（通过JavaBean EJB组件实现）， “View” 是应用的显示面，用于与用户的交互（由JSP页面产生），”Controller” 是提供应用的处理过程控制（一般是一个Servlet），通过这种设计模型把应用逻辑，处理过程和 显示逻辑分成不同的组件实现。这些组件可以进行交互和重用。
@@ -178,7 +178,7 @@ session.invalidate();
 <c:when>	|<c:choose>的子标签，用来判断条件是否成立
 <c:otherwise>|<c:choose>的子标签，在<c:when>标签后,当<c:when>标签判断为false时被执行
 
-+ 四种会话跟踪技术:
++ 四种会**话跟踪技术**:
   + 表单/url?
   + hidden
   + cookie
