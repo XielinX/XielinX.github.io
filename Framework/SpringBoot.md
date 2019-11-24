@@ -1,6 +1,51 @@
 # SpringBoot
 ## hello world
 ## web开发
+### 错误页面的定制
+#### 原理
+1. defaultErrorAttribute
+2. BasicErrorController : 处理默认/error请求
+```java
+@Controller
+@RequestMapping("${server.error.path:${error.path:/error}}")
+public class BasicErrorController extends AbstractErrorController {
+
+    /**
+     * text/html,产生html类型的数据
+     */
+	@RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
+	public ModelAndView errorHtml(HttpServletRequest request, 
+        HttpServletResponse response) {
+	HttpStatus status = getStatus(request);
+		Map<String, Object> model = Collections
+				.unmodifiableMap(getErrorAttributes(request, isIncludeStackTrace(request, MediaType.TEXT_HTML)));
+		response.setStatus(status.value());
+		
+		//
+		ModelAndView modelAndView = resolveErrorView(request, response, status, model);
+		return (modelAndView != null) ? modelAndView : new ModelAndView("error", model);
+	}
+
+    /**
+     * 产生json数据
+     */
+	@RequestMapping
+	public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+		Map<String, Object> body = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.ALL));
+		HttpStatus status = getStatus(request);
+		return new ResponseEntity<>(body, status);
+	}
+}
+
+```
+3. ErrorPageCustomizer : 
+```java
+@Value("${error.path:/error}")
+private String path = "/error";// 系统出现错误,来到/error请求路径(默认)
+```
+4. DefaultErrorViewResolver
+  系统出现4xx或5xx之类的错误,ErrorPageCustomizer就会生效,来到/error请求,会被BasicErrorController处理
+
 ## 定时任务
 ## AOP
 ## Redis
@@ -97,3 +142,4 @@ public class IndexController {
 	}
 }
 ```
+### @ControllerAdvice
