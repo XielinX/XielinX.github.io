@@ -3,7 +3,7 @@
 ## web开发
 ### 错误页面的定制
 #### 原理
-1. defaultErrorAttribute
+1. defaultErrorAttribute : 
 2. BasicErrorController : 处理默认/error请求
 ```java
 @Controller
@@ -44,7 +44,44 @@ public class BasicErrorController extends AbstractErrorController {
 private String path = "/error";// 系统出现错误,来到/error请求路径(默认)
 ```
 4. DefaultErrorViewResolver
-  系统出现4xx或5xx之类的错误,ErrorPageCustomizer就会生效,来到/error请求,会被BasicErrorController处理
+```java
+public ModelAndView resolveErrorView(HttpServletRequest request, 			HttpStatus status, Map<String, Object> model) {
+	ModelAndView modelAndView = resolve(String.valueOf(status.value()), model);
+		if (modelAndView == null && SERIES_VIEWS.containsKey(status.series())) {
+			modelAndView = resolve(SERIES_VIEWS.get(status.series()), model);
+		}
+		return modelAndView;
+	}
+
+
+private ModelAndView resolve(String viewName, Map<String, Object> model) {
+	String errorViewName = "error/" + viewName;// 视图名:error/400
+	// 模板引擎可用,
+	TemplateAvailabilityProvider provider = this.templateAvailabilityProviders.getProvider(errorViewName,
+				this.applicationContext);
+		if (provider != null) {
+			return new ModelAndView(errorViewName, model);
+		}
+		// 没有模板引擎,error/状态码.html
+		return resolveResource(errorViewName, model);
+	}
+```
+
+系统出现4xx或5xx之类的错误,ErrorPageCustomizer就会生效,来到/error请求,会被BasicErrorController处理
+#### 定制
++ 返回html页面
+  1) 有模板引擎;error/状态码: 错误页面命名为 `状态码.html`,并放在模板引擎文件夹下的error文件夹下(templates/error/),可以使用4xx和5xx来泛指4或5开头的状态码信息,按精确优先原则(优先寻找精确的状态码.html)
+  2) 模板引擎找不到这个页面,静态资源文件夹下找(static/)
+  3) 都没有,默认来到SpringBoot默认的错误提示页面,Whitelabel Error Page
+
++ 页面获取的信息:
+  timestap : 时间戳
+  status : 状态码 
+  error : JSR303数据校验的错误
+  message : 错误信息
+  exception : 异常对象
+
+2. 返回json数据
 
 ## 定时任务
 ## AOP
@@ -142,4 +179,3 @@ public class IndexController {
 	}
 }
 ```
-### @ControllerAdvice
