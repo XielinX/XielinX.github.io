@@ -21,11 +21,13 @@ Set<ConstraintViolation<Car>> constraintViolations = validator.validate(car);
 > 2. validateProperty(Object obj,String bean)方法,您可以验证给定对象的单个命名属性。该属性名称是JavaBeans属性名称。
 ```java
  Car car = new Car("Morris", "D", 1);
+// 验证给定对象的某个属性 
 Set<ConstraintViolation<Car>> violations = validator.validateProperty(car, "licensePlate");
 ```
 > 3. validateValue()方法,可以检查给定类的单个属性是否可以成功验证（如果该属性具有指定的值）
 ```java
- Set<ConstraintViolation<Car>> violations = validator.validateValue(Car.class,"licensePlate","A");// 类名,属性,属性值
+//  
+Set<ConstraintViolation<Car>> violations = validator.validateValue(Car.class,"licensePlate","A");// 类名,属性,属性值
 ```
 
 3. 需要的jar包
@@ -54,7 +56,24 @@ Set<ConstraintViolation<Car>> violations = validator.validateProperty(car, "lice
 | @AssertTrue   | 布尔,为true       |
 | @AssertFalse  | 布尔,为false      |
 | @Min(value)   | 数字，最小为value |
++
+## @Valid与@Validated
++ 都是参数校验
+### @Valid
++ 
+## 四、级联校验
+级联校验: 校验某参数时,该参数又包含其他需要校验的参数,例如:员工类Employee包含部门类对象属性,校验部门类对象属性时需要校验对象的每个字段
+```java
+public class Employee {
+    @Null
+    private Integer id;
+   
+    @NotEmpty
+    private String empName;
+    
+    @Valid
+    private Department dept; // 需要校验部门类的每个属性
+    }
+```
+## 分组校验
 
-## 四、开始使用Validation
-### 传统参数校验
-大多是使用if条件判断
