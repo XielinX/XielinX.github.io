@@ -60,10 +60,25 @@ Set<ConstraintViolation<Car>> violations = validator.validateValue(Car.class,"li
 ## @Valid与@Validated
 + 都是参数校验
 ### @Valid
-+ 
++ 分组功能
+  + 没有 
++ 注解地方
+  + 属性
+  + 方法
+  + 方法参数(重写的方法里的参数不能修饰)
+  + 构造
+### @Validate
++ 分组功能
+  + 有 
++ 注解地方
+  + 类上 
+  + 方法上
+  + 方法参数上
+  + **不能用在属性(字段)上**
 ## 四、级联校验
-级联校验: 校验某参数时,该参数又包含其他需要校验的参数,例如:员工类Employee包含部门类对象属性,校验部门类对象属性时需要校验对象的每个字段
+级联校验: 也叫嵌套验证,校验某参数时,该参数又包含其他需要校验的参数,例如:员工类Employee包含部门类对象属性,校验部门类对象属性时需要校验对象的每个字段
 ```java
+// 员工类
 public class Employee {
     @Null
     private Integer id;
@@ -71,9 +86,184 @@ public class Employee {
     @NotEmpty
     private String empName;
     
-    @Valid
-    private Department dept; // 需要校验部门类的每个属性
+    //@Valid // 嵌套验证必须使用@Valid
+    @NotNull
+    private Department dept; // 需要嵌套校验部门类每个属性
     }
-```
-## 分组校验
+    
+// 部门类    
+public class Department{
+    @Null
+    private Long id;
 
+    @NotNull
+    @PastOrPresent
+    private LocalDateTime createTime;
+}
+
+@RestController
+@Validated
+public class EmployeeController {
+@PostMapping("/add")
+public ResultDTO addEmp(@RequestBody @Valid Employee employee){
+  // 业务处理      
+  return ResultDTO.success();
+    }
+  }   
+```
+在方法参数上校验时,不主动申明是不会进行嵌套验证的,如这里只会校验dept的非Null,不会校验其部门类对象的每个属性,要嵌套校验需要手动在属性(字段)上加上@Valid注解,(@Validated注解不能作用于属性上)
+## 五、分组校验
+### 什么是分组
+像上面的Employee类,
+新增时:
+> id,必须为null
+> empName,不为空
+
+修改时:
+> id,必须不为null
+> empName,按需修改
+
+这样就需要分组校验了
+### 如何分组
+```java
+// 员工类
+public class Employee {
+  // 分组设置的接口
+  public interface Add extends Default{}
+  public interface Update{}
+
+  @Null(groups = Add.class) // 新增时生效
+  @NotNull(groups = Update.class) // 修改时生效
+  private Integer id;
+   
+  @NotEmpty
+  private String empName;
+    
+  @Valid // 嵌套验证必须使用@Valid
+  @NotNull
+  private Department dept; // 需要嵌套校验部门类每个属性
+  }
+    
+// 部门类    
+public class Department{
+    @Null
+    private Long id;
+
+    @NotNull
+    @PastOrPresent
+    private LocalDateTime createTime;
+}
+
+@RestController
+@Validated
+public class EmployeeController {
+
+  @PostMapping("/add")
+  public ResultDTO addEmp(@RequestBody @Validated({Employee.Add.class})   Employee employee){
+    // 业务处理      
+    return ResultDTO.success();
+    }
+ 
+  @PostMapping("/update")
+  public ResultDTO updateEmp(@RequestBody    @Validated({Employee.Update.class, Default.class}) Employee employee){
+    // 业务处理
+    return ResultDTO.success();
+  }
+}  
+```
+1) 为什么要写分组接口???? 
+两个普通的接口，用于标识，类似于java.io.Serializable 
+2) 指定了分组时,只会对分组参数校验,不会对其他参数校验
+3) 需要校验其他参数时,要添加默认分组
+4) 默认分组:除了指定分组,其他都是默认分组
+
+## 自定义注解
+### 说明
++ 一般注解会自动忽略值参数值为null的校验,但可以使用`@NotNull`注解校验,也可以自定义注解
++ 同一个注解,可以使用在多种数据类型上
+
+## 使用自定义注解
+> 工作类
+```java
+public class Job {
+  
+  @MultiplesOfThree
+  private Long id;
+    
+  @Size(min = 1)
+  private String name;
+    
+  @Size(min = 1,max = 10)
+  @NotNull
+  @MultiplesOfThree
+  private List<String> labels;
+}
+```
+> 自定义注解类
+> 要求:
+> Long类型,值为3的倍数
+> List类型,元素个数为3的倍数
+> 作用2中数据类型,Long,List
+
+```java
+@Target({FIELD})
+@Retention(RUNTIME)
+@Documented
+@Constraint(validatedBy = {MultiplesOfThreeForLong.class, MultiplesOfThreeForList.class})
+public @interface MultiplesOfThree {
+
+    String message() default "必须是 3 的倍数";
+    
+    Class<?>[] groups() default { };
+    
+    Class<? extends Payload>[] payload() default { };
+}
+```
+> @Constraint的校验实现类MultiplesOfThreeForLong
+```java
+public class MultiplesOfThreeForLong implements ConstraintValidator<MultiplesOfThree, Long> {
+    
+  @Override
+  public void initialize(MultiplesOfThree constraintAnnotation) {}
+    
+@Override
+public boolean isValid(Long value, ConstraintValidatorContext context) {
+  // 检验规则
+  if (value == null) {
+   return true;
+  }
+   return value % 3 == 0;
+  }
+}
+```
+> @Constraint的校验实现类MultiplesOfThreeForList
+```java
+public class MultiplesOfThreeForList implements ConstraintValidator<MultiplesOfThree, List> {
+  @Override
+  public void initialize(MultiplesOfThree constraintAnnotation) {}
+    
+ @Override
+ public boolean isValid(List value, ConstraintValidatorContext context){
+   // 判断是否符合校验条件
+   if (value == null) {
+     return true;
+   }
+     return value.size() % 3 == 0;
+  }
+}
+```
+> 测试
+> 参数  Job  job = { "id": 3, "name" : "销售经理", "labels" : ["可爱","活泼","帅气"] }
+```java
+@RestController
+@RequestMapping("/job")
+@Validated
+public class JobController {
+    
+    @PostMapping("/add")
+    public ResultDTO addJob(@RequestBody @Valid Job job){
+        //
+        return ResultDTO.success();
+    }
+}
+```
