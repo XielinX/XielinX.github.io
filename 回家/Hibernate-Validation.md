@@ -267,3 +267,98 @@ public class JobController {
     }
 }
 ```
+## List中做分组校验
+> 有一个Controller请求,如下
+```java
+@RestController
+@RequestMapping("/job")
+@Validated
+public class JobController {
+
+  /*
+   * 参数为集合对象,需要校验集合里的每一个对象
+   */
+  @PostMapping("/list")
+  public ResultDTO addEmpByBatch(@RequestBody     @Validated({Employee.Add.class, Default.class}) List<Employee> empList){
+        //
+        return ResultDTO.success();
+    }
+}    
+```
+> 会发现,不会校验集合里的每个Employee对象,于是自定义一个注解类和校验器类
+```java
+@Target({FIELD,PARAMETER})
+@Retention(RUNTIME)
+@Documented
+@Constraint(validatedBy = {ValidListForList.class})
+public @interface ValidList {
+    
+    // 自定义分组
+    Class<?>[] grouping() default { };
+    
+    // 快速失败:有一个错误,后面都不会去校验
+    boolean quickFail() default false;
+    
+    String message() default "";
+    
+    Class<?>[] groups() default { };
+    
+    Class<? extends Payload>[] payload() default { };
+}
+```
+```java
+// 校验器类
+public class ValidListForList implements ConstraintValidator<ValidList, List> {
+    
+    private Class<?>[] grouping;
+    private boolean quickFail;
+    
+    @Override
+    public void initialize(ValidList constraintAnnotation) {
+        grouping = constraintAnnotation.grouping();
+        quickFail = constraintAnnotation.quickFail();
+    }
+    
+    /**
+     * 循环校验集合元素,出现错误立即抛出异常
+     * @param value 待校验集合
+     * @param context ?
+     * @return 校验成功,返回true
+     */
+    @Override
+    public boolean isValid(List value, ConstraintValidatorContext context) {
+        Map<Integer,Set<ConstraintViolation<Object>>> errors = new HashMap<>();
+        for (int i = 0; i < value.size(); i++) {
+            Object object = value.get(i);
+            Set<ConstraintViolation<Object>> violationSet = ValidatorUtil.validator.validate(object,grouping);
+            // 一旦发现异常,存储第一个异常信息,然后快速失败
+            if (violationSet.size() > 0){
+                errors.put(i,violationSet);
+                if (quickFail){
+                    throw new ValidListException(errors);
+                }
+            }
+        }
+        
+        // 有异常信息,抛出
+        if (errors.size() > 0){
+            throw new ValidListException(errors);
+        }
+        return true;
+    }
+}
+```
+> 修改控制层
+```java
+@RestController
+@RequestMapping("/job")
+@Validated
+public class JobController {
+
+  @PostMapping("/list")
+  public ResultDTO addEmpByBatch(@RequestBody @ValidList(grouping = {Employee.Add.class, Default.class},quickFail = true){
+        //
+        return ResultDTO.success();
+    }
+}    
+```
