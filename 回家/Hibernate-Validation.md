@@ -113,7 +113,7 @@ public ResultDTO addEmp(@RequestBody @Valid Employee employee){
 ```
 在方法参数上校验时,不主动申明是不会进行嵌套验证的,如这里只会校验dept的非Null,不会校验其部门类对象的每个属性,要嵌套校验需要手动在属性(字段)上加上@Valid注解,(@Validated注解不能作用于属性上)
 ## 五、分组校验
-### 什么是分组
+### 5.1 什么是分组
 像上面的Employee类,
 新增时:
 > id,必须为null
@@ -124,7 +124,7 @@ public ResultDTO addEmp(@RequestBody @Valid Employee employee){
 > empName,按需修改
 
 这样就需要分组校验了
-### 如何分组
+### 5.2 如何分组
 ```java
 // 员工类
 public class Employee {
@@ -177,12 +177,12 @@ public class EmployeeController {
 3) 需要校验其他参数时,要添加默认分组
 4) 默认分组:除了指定分组,其他都是默认分组
 
-## 自定义注解
-### 说明
+## 六、自定义注解
+### 6.1说明
 + 一般注解会自动忽略值参数值为null的校验,但可以使用`@NotNull`注解校验,也可以自定义注解
 + 同一个注解,可以使用在多种数据类型上
 
-## 使用自定义注解
+### 6.2使用自定义注解
 > 工作类
 ```java
 public class Job {
@@ -267,7 +267,7 @@ public class JobController {
     }
 }
 ```
-## List中做分组校验
+## 七、List中做分组校验
 > 有一个Controller请求,如下
 ```java
 @RestController
@@ -279,7 +279,7 @@ public class JobController {
    * 参数为集合对象,需要校验集合里的每一个对象
    */
   @PostMapping("/list")
-  public ResultDTO addEmpByBatch(@RequestBody     @Validated({Employee.Add.class, Default.class}) List<Employee> empList){
+  public ResultDTO addEmpByBatch(@RequestBody  @Validated({Employee.Add.class, Default.class}) List<Employee> empList){
         //
         return ResultDTO.success();
     }
@@ -361,4 +361,88 @@ public class JobController {
         return ResultDTO.success();
     }
 }    
+```
+## 八、bean参数间的逻辑校验
+### 8.1 场景
+员工类里要求: 根据年龄来校验title的参数值
+  年龄在20~25之间的,title开头为"初级",例如"初级xxxx"
+  年龄在2~30之间的,title开头为"中级",例如"中级xxxx"
+  否则,不校验
+### 编程
+> employee实体类
+```java
+@GroupSequenceProvider(EmployeeSequenceProvider.class)
+public class Employee {
+    
+    public interface Add extends Default {}
+    public interface Update{}
+    
+    /**
+     * 分组:
+     *  新增时:id为null,empName不为空
+     *  修改时:id不为null,
+     */
+    @Null(groups = Add.class) // 新增时生效
+    @NotNull(groups = Update.class) // 修改时生效
+    private Long id;
+    
+    @NotEmpty
+    private String empName;
+    
+    @Valid
+    private Department dept;
+    
+    /**
+     * 根据年龄,校验title
+     * age:20~25,title的开头"初级"
+     * age:25~30,title的开头"中级"
+     * 否则,其他
+     */
+    @NotNull
+    private Integer age;
+    
+    public interface JuniorTitle{} // 初级\u521d\u7ea7
+    public interface MiddleTitle{} // 中级\u4e2d\u7ea7
+    
+    // 正则一定要写uniocode编码???
+    @NotNull
+    @Pattern(regexp = "^\u521d\u7ea7.*",groups = JuniorTitle.class)
+    @Pattern(regexp = "^\u4e2d\u7ea7.*",groups = MiddleTitle.class)
+    private String title;
+}
+```
+> 使用@GroupSequenceProvider,来动态定义默认分组
+> 需要实现接口DefaultGroupSequenceProvider\<?\>
+```java
+public class EmployeeSequenceProvider implements DefaultGroupSequenceProvider<Employee> {
+    
+    @Override
+    public List<Class<?>> getValidationGroups(Employee employee) {
+        // 添加默认分组
+        List<Class<?>> defaultGroupSequence = new ArrayList<>();
+        defaultGroupSequence.add(Employee.class);
+    
+        /**
+         * age:20~25,初级组
+         * age:25~30,中级组
+         */
+        if (employee != null) {
+            if (20 <= employee.getAge() && employee.getAge() <= 25) {
+                defaultGroupSequence.add(Employee.JuniorTitle.class);
+            } else if (25 < employee.getAge() && employee.getAge() <= 30) {
+                defaultGroupSequence.add(Employee.MiddleTitle.class);
+            }
+        }
+        // 最后就是{default.class,?} ?=初级组或者中级组或者没有
+        return defaultGroupSequence;
+    }
+}
+```
+> controller测试
+> 如果输入{"empName":"张三","age":22,"title":"程序员"}会报错说,没有匹配正则/*初级*/
+```java
+ @PostMapping("/updateTitle")
+    public ResultDTO updateEmpWithTitle(@RequestBody  @Valid Employee employee){
+        return ResultDTO.success();
+    }
 ```
