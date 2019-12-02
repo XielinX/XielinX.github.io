@@ -181,6 +181,7 @@ public class EmployeeController {
 ### 6.1说明
 + 一般注解会自动忽略值参数值为null的校验,但可以使用`@NotNull`注解校验,也可以自定义注解
 + 同一个注解,可以使用在多种数据类型上
++ JSR303还是Hibernate-Validation都是对Object类型的参数校验,不对单个参数校验
 
 ### 6.2使用自定义注解
 > 工作类

@@ -1,5 +1,6 @@
 # SpringBoot
-## hello world
+## yml
+
 ## web开发
 ### 错误页面的定制
 #### 原理
