@@ -17,11 +17,11 @@ Sun引入新的JPA ORM规范出于两个原因：其一，简化现有Java EE和
 | @Column                   | 当数据库与实体类的字段不同时使用                             |
 |                           |                                                              |
 |                           |                                                              |
-## JPA的API
+## 三、 JPA的API
 + EntityManagerFactory
 + EntityManager
 + EntityTransaction
-## JPA的三种状态
+## 四、JPA的三种状态
 + 新建状态(瞬时状态)
 实例化创建的对象
 
@@ -30,8 +30,9 @@ Sun引入新的JPA ORM规范出于两个原因：其一，简化现有Java EE和
 
 + 游离状态
 事务提交或者EntityManager关闭时
-## 常用方法
+## 五、常用方法
 ### find()
 ### refence()
 ### merge()
-## JPA映射关系
+## 六、JPA映射关系
+### 6.1 多对一
