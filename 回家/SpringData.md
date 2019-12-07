@@ -35,4 +35,49 @@ Sun引入新的JPA ORM规范出于两个原因：其一，简化现有Java EE和
 ### refence()
 ### merge()
 ## 六、JPA映射关系
-### 6.1 多对一
+### 6.1映射关系理解
++ 一对一
+使用学生与学生证理解
+对于学生: 1个学生只能有1张学生证
+对于学生证:1张学生证对于1个学生
+所以学生是one,学生证是one
+
++ 一对多
+使用学生与班级理解
+对于学生: 1个学生只能有1个班级
+对于班级:1个班级可以有n个学生
+所以学生是many,班级是one
+
++ 多对多
+使用老师与班级理解
+对于老师: 1个老师只负责1个班级
+对于班级:1个班级只由1个老师管理
+所以老师是many,班级是one 
+### 6.2 多对多
+多对多的关系可以自行定义谁是维护端和被维护端,我们这里使用用户`t_user`
+和角色`t_role`以及两者的关联`user_role`表,
+> UserRole表: id,userId,roleId
+
+这里以User为维护端
+> User实体类:
+```java
+public class User{
+	// 多对多的维护端
+  @ManyToMany
+  @JoinTable(name="user_role",// 中间表的表名
+  // urid:user_role的主键,uid:user的主键
+  joinColumns={@JoinColumn(name="urid",referencedColumnName="uid")},
+  //其他表,rid:user_role表的主键,rid:role表的主键
+inverseJoinColumns={@JoinColumn(name="rid",referencedColumnName="rid")})
+  private Set<Role> roleSet 
+}
+```
+> 被维护端:Role实体类
+```java
+public class Role{
+
+// 
+@ManyToMany(mappedBy="roleSet")
+private List<User> userList
+}
+```
