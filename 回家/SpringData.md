@@ -81,3 +81,13 @@ public class Role{
 private List<User> userList
 }
 ```
+## 七、JPQL
+JPQL语言就是java persistence query language,与sql类似
+规则:
+JPQL与SQL的关键字没有区别,不区分大小写
+JPQL的字段名,表名使用的是java实体类的属性名和类名(严格区分大小写)
+JPQL编码规范:将SQL的关键之全大写,不支持*
+> sql: select * from t_user u
+> jpql: select u from User u
+
+
