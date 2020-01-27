@@ -1,4 +1,4 @@
-## Spring
+# Spring
 + spring介绍:
 > 一个轻量级框,6个模块
 > 1. Core Container（Spring的核心）【重要】
@@ -93,16 +93,16 @@ global-session	|
     + `@Autowired`: byType,和`@Qualified`一起使用(spring框架的)
     + `@Resources`: byName,未找到再byType(java的Annotation包)
 
-#### IOC[^ioc]
-
-[^ioc]:inversion of control 控制反转
+## IOC
+inversion of control 控制反转
 
 + 核心思想:将设计好的类交给容器去实例化及装配,不用自己去手动创建
-#### AOP[^aop]
+## AOP
+### 概念
+aspect oriented programming  面向切面编程,是一种对面向对象编程(oop)的补充思路.oop的模块化是pojo类,而aop的模块化是切面,不单指某个pojo类,可以是多个类型或对象
 
-[^aop]:aspect oriented programming  面向切面编程
-
-**8术语:**
+例如,单一的登录过程,1.http请求 2. controller层(可能有登录日志log) 3.service层(有权限校验right) 4.dao层(有事务处理tx) 这些产生的横切性问题都统一为切面 
+### **基本术语:**
 1. Aspect:切面(pointcut+Advice),很多模块都有通用的功能,抽取出通用的功能就是切面,如编码都要utf-8
 2. Joinpoint:连接点,程序执行过程中的特定点/位置(方法前,后....)
 3. **Advice**:增强/通知,切面的具体实现,他会在某个特定的点上执行动作(调用方法)如保存订单模块时,记录日志,实现保存日志功能的类就是通知
@@ -160,7 +160,7 @@ global-session	|
 #### 数据库
 + 三大范式
 > 1. 第一范式（1NF）:**元素不可再分**
-    强调的是列的原子性，即列不能够再分成其他几列。
+      强调的是列的原子性，即列不能够再分成其他几列。
 > 2. 第二范式（2NF）: **不能部分依赖**
 首先是 1NF，另外包含两部分内容，一是表必须有一个主键；二是没有包含在主键中的列必须完全依赖于主键，而不能只依赖于主键的一部分。
 在1NF基础上，任何非主属性不依赖于其它非主属性[在2NF基础上消除传递依赖]。
