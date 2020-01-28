@@ -1,5 +1,5 @@
 # Spring
-+ spring介绍:
+## 一、spring介绍:
 > 一个轻量级框,6个模块
 > 1. Core Container（Spring的核心）【重要】
 > 2. AOP（面向切面变成）【重要】
@@ -9,13 +9,14 @@
 > 6. Test（Spring测试支持，包含JUint等测试单元的支持） 7、Instrumentation（设备支持，比如Tomcat的支持） 
 
 
-+ Bean
+## 二、Bean
+### 2.1简介
 属性	|描述
 :--------|:---------------
 class	|指定bean的类名
 name	|bean的唯一标识符,也可以使用id标识符
 
-+ bean的作用域(scope)
+### 2.2bean的作用域(scope)
 作用域	|描述
 :--------|:---------------
 singleton	|bean以单例方式存在,默认值
@@ -24,17 +25,18 @@ request	|
 session	|
 global-session	|
 
-+ bean的生命周期
-  1. 实例化,(构造方法,创建对象)
-  2. 装配,(可选,为属性赋值)
-  3. 回调,(可选)
-  4. 初始化,(init_method方法)
-  5. 就绪,(使用)
-  6. 销毁(destroy方法)
-+ 依赖注入/Dependence Inject
- 1. 概念:给bean注入属性的值 
- 2. **注入方式**
-   + ①setter方法注入
+### 2.3 bean的生命周期
+1. 实例化,(构造方法,创建对象)
+2. 装配,(可选,为属性赋值)
+3. 回调,(可选)
+4. 初始化,(init_method方法)
+5. 就绪,(使用)
+6. 销毁(destroy方法)
+## 三、依赖注入/Dependence Inject
+### 3.1概念
++ 给bean注入属性的值 
+### 3.2注入方式
+> ①setter方法注入
 ```xml
 <bean id="" class="">
 	<property name="属性" value="属性值"></property>
@@ -69,50 +71,87 @@ global-session	|
 > ③静态工厂的方法注入(接口方法)
 > ④实例工厂的方法注入(接口方法)
 
-+ 依赖检查模式:确保所要求的属性可设置或注入
+### 3.3 依赖检查模式
++ 确保所要求的属性可设置或注入
 > `<bean id="" class="" dependency-check=""></bean>
 > 1. none – 没有依赖检查，这是默认的模式。
 > 2. simple – 如果基本类型(int, long,double…)和集合类型(map, list..)的任何属性都没有设置，UnsatisfiedDependencyException将被抛出
 > 3. objects – 如果对象类型的任何属性都没有设置，UnsatisfiedDependencyException将被抛出
 > 4. all – 如果任何类型的任何属性都没有被设置，UnsatisfiedDependencyException将被抛出
 
-+ Spring支持的5种自动装配 模式
+### 3.4 Spring支持的5种自动装配模式
 > 1. no:缺省情况下，自动配置是通过“ref”属性手动设定 
 > 2. byName: 根据属性名称自动装配如果一个bean的名称和其他bean属性的名称是一样的，将会自装配它
 > 3. byType: 按数据类型自动装配。如果一个bean的数据类型是用其它bean属性的数据类型，兼容并自动装配它。
 > 4. constructor – 在构造函数参数的byType方式。
 > 5. autodetect – 如果找到默认的构造函数，使用“自动装配用构造”; 否则，使用“按类型自动装配”
 
-+ spring的注解
-  + spring的EL表达式
-    + `@value(#{...})`:配置文件值
-    + `@Component`:类的自动扫描组件,相当于xml里设置`<bean name=""/>`
-    + `@Repository`: 表示在持久层DAO组件。
-    + `@Service`: 表示在业务层服务组件。
-    + `@Controller`: 表示在表示层控制器组件
-    + `@Autowired`: byType,和`@Qualified`一起使用(spring框架的)
-    + `@Resources`: byName,未找到再byType(java的Annotation包)
+### 3.5 spring的注解
++ spring的EL表达式
+  + `@value(#{...})`:配置文件值
+  + `@Component`:类的自动扫描组件,相当于xml里设置`<bean name=""/>`
+  + `@Repository`: 表示在持久层DAO组件。
+  + `@Service`: 表示在业务层服务组件。
+  + `@Controller`: 表示在表示层控制器组件
+  + `@Autowired`: byType,和`@Qualified`一起使用(spring框架的)
+  + `@Resources`: byName,未找到再byType(java的Annotation包)
 
-## IOC
+## 四、IOC
 inversion of control 控制反转
 
 + 核心思想:将设计好的类交给容器去实例化及装配,不用自己去手动创建
-## AOP
-### 概念
+## 五、AOP
+### 5.1 概念
 aspect oriented programming  面向切面编程,是一种对面向对象编程(oop)的补充思路.oop的模块化是pojo类,而aop的模块化是切面,不单指某个pojo类,可以是多个类型或对象
 
 例如,单一的登录过程,1.http请求 2. controller层(可能有登录日志log) 3.service层(有权限校验right) 4.dao层(有事务处理tx) 这些产生的横切性问题都统一为切面 
-### **基本术语:**
-1. Aspect:切面(pointcut+Advice),很多模块都有通用的功能,抽取出通用的功能就是切面,如编码都要utf-8
-2. Joinpoint:连接点,程序执行过程中的特定点/位置(方法前,后....)
-3. **Advice**:增强/通知,切面的具体实现,他会在某个特定的点上执行动作(调用方法)如保存订单模块时,记录日志,实现保存日志功能的类就是通知
-4. Pointcut: 切入点,连接点的集合,通知在连接点上运行(定义一个方法何时被拦截)
-5. Introduction:引入,允许你添加新方法或属性到现有类中
-6. **Target object**: 目标对象,就是被代理对象
-7. AOP  Proxy:目标对象的代理对象
-8. Weaving:织入,把切面连接到其他运用程序上,创建一个被通知的对象的过程(切面的的实现过程)
+### 5.2 基本术语
+#### 5.2.1Aspect
+切面(pointcut+Advice),很多模块都有通用的功能,抽取出通用的功能就是切面,如编码都要utf-8
+#### Joinpoint
+连接点,程序执行过程中的特定点/位置(方法前,后....)
+##### ProceedingJoinPoint
+ProceedingJoinPoint接口实现了JoinPoint接口,
+#### Advice
+增强/通知,切面的具体实现,他会在某个特定的点上执行动作(调用方法)如保存订单模块时,记录日志,实现保存日志功能的类就是通知
 
-+ AOP实现原理
+##### 通知类型
+通知	|	描述
+:---------|:--------------
+前置通知MethodBeforeAdvice接口	|在一个方法执行前,执行通知
+后置通知MethodafterAdvice接口	|在一个方法执行后,不考虑结果,执行通知
+返回后通知AfterReturningAdvice接口	|在一个方法执行后,且方法执行成功返回时,执行通知
+抛出异常后通知	ThrowsAdvice接口 |在一个方法执行后,抛出异常时,执行通知
+环绕通知` MethodInterceptor`接口 	|在方法调用之前和之后,,执行通知
+
+##### 常见AspectJ的注解
++ `@Before` – 方法执行前运行`<aop:before>`(xml)
++ `@After` – 运行在方法返回结果后`<aop:after>`
++ `@AfterReturning` – 运行在方法返回一个结果后，在拦截器返回结果。`<aop:After-returning>`(xml)
++ `@AfterThrowing` – 运行方法在抛出异常后，`<aop:after-throwing>`(xml)
++ `@Around`– 围绕方法执行运行，结合以上这三个通知。`<aop:after-around>`(xml)
+#### Pointcut
+切入点,连接点的集合,通知在连接点上运行(定义一个方法何时被拦截)
+1. execution 
+用于匹配方法执行join point(连接点),最小粒度方法,在aop中主要使用
+```
+execution(modifiers-pattern? ret-type-pattern declaring-type-pattern?name-pattern(param-pattern)throws-pattern?)
+问号表示可省略,使用说明如下
+modifiers-pattern:方法可见性,如public,private
+ret-type-pattern: 方法返回类型,如int,void
+declaring-type-pattern: 
+
+```
+#### Introduction
+引入,允许你添加新方法或属性到现有类中
+#### Target object
+目标对象,就是被代理对象
+#### Proxy target
+目标对象的代理对象
+#### Weaving
+织入,把切面连接到其他运用程序上,创建一个被通知的对象的过程(切面的的实现过程)
+
+### 5.3AOP实现原理
 > 代理,AOP代理主要分为静态代理和动态代理，静态代理的代表为AspectJ；而动态代理则以Spring AOP为代表。
 > Spring AOP中的动态代理主要有两种方式:
 > JDK动态代理和CGLIB动态代理。JDK动态代理通过反射来接收被代理的类，并且要求被代理的类必须实现一个接口
@@ -123,22 +162,8 @@ aspect oriented programming  面向切面编程,是一种对面向对象编程(o
   + Lazy loading 懒加载 
   + Synchronization 同步，Transactions 事务
 
-+ 通知类型
-通知	|	描述
-:---------|:--------------
-前置通知MethodBeforeAdvice接口	|在一个方法执行前,执行通知
-后置通知MethodafterAdvice接口	|在一个方法执行后,不考虑结果,执行通知
-返回后通知AfterReturningAdvice接口	|在一个方法执行后,且方法执行成功返回时,执行通知
-抛出异常后通知	ThrowsAdvice接口 |在一个方法执行后,抛出异常时,执行通知
-环绕通知` MethodInterceptor`接口 	|在方法调用之前和之后,,执行通知
 
-#### 常见AspectJ的注解
-+ `@Before` – 方法执行前运行`<aop:before>`(xml)
-+ `@After` – 运行在方法返回结果后`<aop:after>`
-+ `@AfterReturning` – 运行在方法返回一个结果后，在拦截器返回结果。`<aop:After-returning>`(xml)
-+ `@AfterThrowing` – 运行方法在抛出异常后，`<aop:after-throwing>`(xml)
-+ `@Around`– 围绕方法执行运行，结合以上这三个通知。`<aop:after-around>`(xml)
-#### spring的事务
+## 六、 spring的事务
 + 概念: 数据库的操作管理遵从数据的完整性[^1]约束,例如操作失败的需要进行回滚到刚开始的样子
 
   [^1]:数据完整性指数据库中的所有数据值均正确的状态。如果有存储有不正确的数据值，则该数据库称为已丧失数据完整性
@@ -157,7 +182,7 @@ aspect oriented programming  面向切面编程,是一种对面向对象编程(o
   + 串行化(Serializable) : 最可靠的级别,能防止前三者
 
 
-#### 数据库
+## 七、数据库
 + 三大范式
 > 1. 第一范式（1NF）:**元素不可再分**
       强调的是列的原子性，即列不能够再分成其他几列。
