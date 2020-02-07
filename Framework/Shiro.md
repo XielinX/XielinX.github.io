@@ -1,4 +1,14 @@
 # Apache Shiro
+## 掌握的知识点
++ `Shiro`的理解,作用
++ shiro框架的搭建,文件配置
++ 加密,自定义验证
++ 会话管理
++ 记住我
++ 权限校验,自定义realm,角色
++ shiro的过滤链
++ shiro缓存
++ 
 ## 一、 简介
 `Apache Shiro` 是一个强大而灵活的开源安全框架，它干净利落地处理身份认证，授权，企业会话管理和加密。 
 
@@ -123,14 +133,14 @@ currentUser.login(token);
   + 一个已认证的 Subject 是指在当前 Session 中被成功地验证过了
   + 也就是说，login 方法被调用并且没有抛出异常
   + 如果 subject.isAuthenticated()返回 true 则认为 Subject 已通过验证。  
-
-> Mutually Exclusive Relationship(互斥关系)
->  Remembered 和 Authenticated 是互斥的,若其中一个为真则另一个为假，反之亦然
++ 说明:
+  + 两者是Mutually Exclusive Relationship(互斥关系)
+  + Remembered 和 Authenticated 是互斥的,若其中一个为真则另一个为假，反之亦然
 
 **理解用例:**
-你正在公司电脑登录自己的Amazon.com,选了几本书籍加入购物车,这时你突然要去开会,会议结束,忘记注销/退出,下班直接回家.
+你正在公司电脑登录自己的Amazon.com网站,选了几本书籍加入购物车,这时你突然要去开会,会议结束,忘记注销/退出,下班直接回家.
 
-第二天,意思到还没购买书籍,打开Amazon,由于第一次"记住我",可以继续操作,对于Amazon来说,subject.isRemembered() 将返回 true。
+第二天,意思到还没购买书籍,打开Amazon,由于第一次"记住我",可以继续操作(免登录直接进入),对于Amazon来说,subject.isRemembered() 将返回 true。
 
 但是当你想要访问账户修改信用卡信息来支付购买账单时,尽管amazon记住你(isRemembered() == true),它无法保证你就是实际的你(可能是你的同事在操作),
 所以在执行敏感操作时,amazon强制让你登录,来核实你的身份,同时对 Amazon 而言，isAuthenticated()现在返回是 true
@@ -174,7 +184,7 @@ if(user.hasRole("monitor") || user.haoRole("manager")){
 //可以看出,如果角色频繁变更,代码判断逻辑也要频繁的修改
 ```
 
-+ 显示角色
++ 显式角色
   
   > Resource-Based Access Control(基于资源),一个显式角色本质上是一个实际许可声明的命名集合
 
@@ -214,7 +224,7 @@ Realm 是一个能够访问应用程序特定的安全数据（如用户、角�
 
 | AuthenticationStrategy         | 描述                                                         |
 | ------------------------------ | ------------------------------------------------------------ |
-| `AtLeastOneSuccessfulStrategy` | 至少一个Realm 验证成功，则整体的 尝试被认为是成功的。如果没有一个验证成功，则整体尝试失败 (默认模式) |
+| `AtLeastOneSuccessfulStrategy` | 至少一个Realm 验证成功，则整体的 尝试被认为是成功的。如果没有一个验证成功，则整体尝试失败 (默认) |
 | `FirstSuccessfulStrategy`      | 只有第一个成功地验证的 Realm 返回的信息将被使用。其他所有进一步的 Realm 将被忽略。如果没有 一个验证成功，则整体尝试失败 |
 | `AllSucessfulStrategy`         | 为了整体的尝试成功，所有配置的 Realm 必须验 证成功。如果没有一个验证成功，则整体尝试失 败 |
 
@@ -263,9 +273,9 @@ protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal
     
     // SimpleAuthorizationInfo负责写入
 	SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-	
 	authorizationInfo.setRoles(roles);
     authorizationInfo.setStringPermissions(permissions);
+    
     return authorizationInfo;
     }
 ```
@@ -291,7 +301,7 @@ session.setAttribute("someKey", someValue);
 默认地，Shiro 的 SessionManager 实现默认是 30 分钟会话超时,
 可以设置 SessionManager 默认实现的 globalSessionTimeout 
 #### Session DAO
-能够实现该接口来与你想要的任何数据存储进行通信,Session的CRUD
+能够实现该接口来与你想要的任何数据存储进行通信,Session的CRUD,会话管理时会用到
 #### Session 验证& 调度 
 Sessions     必须被验证，这样任何无效(过期或停止)的会话能够从会话数据存储中删除。这保证了数据存储不会由于不能再 次使用的会话而导致写入超
 使用`Default SessionValidationScheduler`定期清楚,默认地，该实现每小时执行一次验
