@@ -5,8 +5,32 @@
 > 为每个映射文件起一个唯一的命名空间,避免起冲突.,就像每一个sql语句都有唯一的ID,
 
 
-
+## 掌握点
+1. `Mybatis`的理解,作用
+2. 自动生成器generator的使用
+3. 各种标签元素,如`resultMap`,`result`,`collection`,`assocition`等
+4. 一对多,多对一的关系
+5. 动态SQL(重要)
+6. 缓存
 ## 表关联的**一对多**,<collection></collection>
+> pojo类: User,Posts
+```java
+public class User{
+  private Integer id;
+  private String username;
+  private String mobile;
+  // 对象集合
+  private  List<Posts> posts;
+}
+
+public class Posts{
+  private Integer id;
+  private String title;
+  private String content;
+}
+
+```
+> Mapper.xml的映射
 ```xml
 <!--user表有一个post对象类型的集合,一个作者有很多帖子-->
 <resultMap type="User" id="resultUserMap">
@@ -23,6 +47,16 @@
 ```
 
 ## 表关联的**多对一**,<association></association>
+> pojo类
+```java
+public class Posts{
+  private Integer id;
+  private String title;
+  private String content;
+  // 类对象
+  private User user;
+}
+```
 ```xml
 <!--post表有一个user对象,很多帖子有同一个作者-->
 <resultMap type="Post" id="resultPostsMap">
