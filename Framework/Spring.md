@@ -6,7 +6,8 @@
 > 3. Messaging（消息发送的支持）
 > 4. Data Access/Integration（数据访问和集成）
 > 5. Web（主要是SpringWeb内容，包括MVC）【重要】
-> 6. Test（Spring测试支持，包含JUint等测试单元的支持） 7、Instrumentation（设备支持，比如Tomcat的支持） 
+> 6. Test（Spring测试支持，包含JUint等测试单元的支持）
+> 7. Instrumentation（设备支持，比如Tomcat的支持） 
 
 
 ## 二、Bean
@@ -34,6 +35,7 @@ global-session	|
 6. 销毁(destroy方法)
 ## 三、依赖注入/Dependence Inject
 ### 3.1概念
++ 依赖注入也叫控制反转,将原先由自己手动创建对象,交给spring容器来创建
 + 给bean注入属性的值 
 ### 3.2注入方式
 > ①setter方法注入
