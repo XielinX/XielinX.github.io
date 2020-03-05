@@ -103,6 +103,41 @@ inversion of control 控制反转
 
 + 核心思想:将设计好的类交给容器去实例化及装配,不用自己去手动创建
 ## 五、AOP
+### demo
+> 切面:示例
+```java
+@Aspect
+@Component
+public class MyAspect {
+ 
+    /**
+     * 切点
+     * execution: 指定表达式,执行
+     */
+    @Pointcut("execution(* com.demo.springaop.service..*.*(..))")
+    public void myPointCut() {
+    }
+    
+    /**
+     * 前置通知
+     */
+    @Before("myPointCut() && !myArgs()")
+    public void doBeforeWithExecution() {
+        log.info("**************aop before*************");
+    }
+    /**
+     * 环绕通知
+     */
+    @Around("myPointCut()")
+    public void doAround(ProceedingJoinPoint pjp) throws Throwable {
+        log.info("**************aop around*************");
+        // 获取参数
+        Object[] args = pjp.getArgs();
+        Object proceed = pjp.proceed();
+    }
+}
+
+```
 ### 5.1 概念
 aspect oriented programming  面向切面编程,是一种对面向对象编程(oop)的补充思路.oop的模块化是pojo类,而aop的模块化是切面,不单指某个pojo类,可以是多个类型或对象
 
