@@ -130,7 +130,7 @@ mongodb.db=hello
 ```
 ### @RestControllerAdvice或@ControllerAdvice
 + 区别
-  + `@RestControllerAdvice`多了一个`@ResponseBody`注解
+  + `@RestController` == `@ResponseBody` + `@Controller`
 + 作用
 全局异常处理,只要作用在@RequestMapping上，所有的异常都会被捕获
 ```java

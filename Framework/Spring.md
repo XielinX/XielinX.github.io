@@ -1,6 +1,6 @@
 # Spring
 ## 一、spring介绍:
-> 一个轻量级框,6个模块
+一个轻量级框,6个模块
 > 1. Core Container（Spring的核心）【重要】
 > 2. AOP（面向切面变成）【重要】
 > 3. Messaging（消息发送的支持）
@@ -9,6 +9,9 @@
 > 6. Test（Spring测试支持，包含JUint等测试单元的支持）
 > 7. Instrumentation（设备支持，比如Tomcat的支持） 
 
+7个模块
+
+![Spring](D:\JAVA\XielinX.github.io\Framework\Spring.png)
 
 ## 二、Bean
 ### 2.1简介
@@ -189,10 +192,10 @@ declaring-type-pattern:
 织入,把切面连接到其他运用程序上,创建一个被通知的对象的过程(切面的的实现过程)
 
 ### 5.3AOP实现原理
-> 代理,AOP代理主要分为静态代理和动态代理，静态代理的代表为AspectJ；而动态代理则以Spring AOP为代表。
+> 代理主要分为静态代理和动态代理，静态代理的代表为AspectJ；而动态代理则以Spring AOP为代表。
 > Spring AOP中的动态代理主要有两种方式:
-> JDK动态代理和CGLIB动态代理。JDK动态代理通过反射来接收被代理的类，并且要求被代理的类必须实现一个接口
-> 如果目标类没有实现接口，那么Spring AOP会选择使用CGLIB来动态代理目标类,,CGLIB是通过继承的方式做的动态代理(final类无法代理)
+> 1. JDK动态代理和CGLIB动态代理。JDK动态代理通过反射来接收被代理的类，并且要求被代理的类必须实现一个接口
+> 2.如果目标类没有实现接口，那么Spring AOP会选择使用CGLIB来动态代理目标类,,CGLIB是通过继承的方式做的动态代理(final类无法代理)
 
 + AOP应用场景:
   + Authentication 权限 ，Caching 缓存 

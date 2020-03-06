@@ -231,6 +231,8 @@ Realm 是一个能够访问应用程序特定的安全数据（如用户、角�
 #### Realm Authentication 
 身份认证,重写doGetAuthenticationInfo方法
 ```java
+public class UserRealm extends AuthorizingRealm {
+
 /*
  * 身份认证
  */
@@ -252,6 +254,7 @@ return new SimpleAuthenticationInfo(user,user.getUserPassword(),
                 ByteSource.Util.bytes(user.getCredentialsSalt()),
                 getName());
     }
+}  
 ```
 #### 自定义CredentialsMatcher
 身份认证的密码匹配服务,也可以自定义匹配,如密码加密方式,加密次数,存储格式
@@ -261,6 +264,9 @@ return new SimpleAuthenticationInfo(user,user.getUserPassword(),
 #### Realm Authorization 
 授权,重写doGetAuthorizationInfo()方法
 ```java
+
+public class UserRealm extends AuthorizingRealm {
+
 /*
  * 授权
  */
@@ -278,6 +284,7 @@ protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal
     
     return authorizationInfo;
     }
+}   
 ```
 
 ### 3.4 Session Management 
@@ -363,7 +370,7 @@ Shiro有三个重要的缓存接口：
 一般使用MD5加密,迭代次数2,使用hex格式存储,MD5(密码明文+盐)
 ![Cryptography](./shiro-shortcut/jiami.png "加密")
 
-修改密码时,salt(随机数)也要一同修改
+备注: 修改密码时,salt(随机数)也要一同修改
 ### 3.9  过滤链
 shiro过滤器,提供强大的功能,能够满足自己特需服务
 
