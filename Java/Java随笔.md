@@ -56,6 +56,9 @@ void test();
 ```
 ### 2.2 元Annotation
 #### @Retention
+
++ retention : 保留
+
 + 只能修饰一个Annotation
 + 用于指定被修饰的Annotation可以保留多长时间
 + @Retention包含一个RetentionPolicy类型的value成员变量,使用时必须指定value值
@@ -139,6 +142,8 @@ public class MyTest extends Base{}
 ```
 ### 2.3 自定义Annotation
 + 使用`@interface`定义
++ 注明保留时间 @Retention
++ 作用目标 @Target
 + `default`指定成员变量默认值
 
 ```java
