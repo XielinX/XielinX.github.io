@@ -126,7 +126,7 @@ SELECT * FROM BLOG
   > 场景:自定义的实现功能,应用广泛
 ```xml
 <!-- prefixOverrides:前缀覆盖/忽略,包含内容的首部某些内容去除,
-suffixOverrides:后缀覆盖/忽略,包含内容的首部去除,
+suffixOverrides:后缀覆盖/忽略,包含内容的尾部去除,
 prefix:前缀,插入属性中指定的内容
 suffix:后缀,插入属性中指定的内容
 -->
@@ -169,12 +169,20 @@ SELECT * FROM user u
 ```xml
 <!-- set 元素会动态前置 SET 关键字，同时也会消除无关的逗号-->
 update Author
-    <set>
-      <if test="username != null">username=#{username},</if>
-      <if test="password != null">password=#{password},</if>
-      <if test="email != null">email=#{email},</if>
-      <if test="bio != null">bio=#{bio}</if>
-    </set>
+  <set>
+    <if test="username != null">
+        username=#{username},
+    </if>
+    <if test="password != null">
+        password=#{password},
+    </if>
+    <if test="email != null">
+        email=#{email},
+    </if>
+    <if test="bio != null">
+        bio=#{bio}
+    </if>
+  </set>
 where id=#{id}
 ```
 
@@ -204,7 +212,7 @@ where id=#{id}
 
 + `#{}`与`${}`
   > #{}:相当于创建一个PreparedStatement 参数占位符`?`能安全的设置参数防止sql注入
-  > ${}:不会修改不会转义字符串,如:ORDER BY ${columnName}
+  > ${}:不会修改也不会转义字符串,如:ORDER BY ${columnName}
 ```java
 @Select("select * from user where id = #{id}")
 User findById(@Param("id") long id);
@@ -227,7 +235,7 @@ User findById(@Param("id") long id);
   flushInterval="60000" 
   size="512" 
   readOnly="true">
-  </cache>
+</cache>
   
   <select ... flushCache="false" useCache="true"/>
 ```
