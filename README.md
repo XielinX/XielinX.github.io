@@ -24,9 +24,10 @@
   + 掌握 `Thymeleaf`,`Jsp`
 + 框架技能 
   + 掌握`Spring` 
-  + 掌握` SpringMVC`,`Mybatis`,`Shiro`
-  + 掌握 `Maven`
-  + 掌握 `SpringBoot`
+  + 掌握`SpringMVC`,`Mybatis`,`Shiro`
+  + 掌握`Maven`
+  + 掌握`SpringBoot`
+  + 掌握`Hibernate-Validation`
   + 熟悉`MyBatisPlus`
 + 数据库技能 
   + 掌握`MySQL`
