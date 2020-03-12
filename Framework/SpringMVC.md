@@ -1,6 +1,7 @@
-# SpringMVC[^1]
-[^1]: 一种基于Java的实现了Web MVC设计模式的请求驱动类型的轻量级Web框架，使用了MVC架构模式的思想
-
+# SpringMVC
+## 认识SpringMVC
+一种基于Java的实现了Web MVC设计模式的请求驱动类型的轻量级Web框架，使用了MVC架构模式的思想
+## 工作原理
 + springmvc的工作原理:
   + 用户发送请求到前端控制器(DispatcherServlet)
   + 请求查询Hander(HanderMapping)
@@ -13,6 +14,11 @@
   + 返回View(DispatcherServlet)
   + 渲染视图
   + 响应用户(DispatcherServlet)
+
+![springmvc](./springmvc.png "SpringMVC原理")
+
+
+
 
 ## 常用的注解
 + SpringMVC常用注解
@@ -115,4 +121,235 @@ public void sayHello(@ModelAttribute("ma") String str){
 | 删除 | /delete/{id} |  DELETE   | 删除资源                  |
 | 修改 |  /edit{id}   | PUT/PATCH | 更新资源(完整)/(部分属性) |
 | 查询 |   /query/    |    GET    | 获取资源                  |
+## 整合项目[^ssm]
+[^ssm]:  Spring + SpringMVC + MyBatis
+### 1.导入jar包
+![spring](./jar-spring.png  "spring-jar")
 
+
+### 2. 配置文件xml
+> spring-application.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context" 
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/tx  
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 加入组件自动扫描路径 -->
+		<context:component-scan base-package="com.etc.myssm"></context:component-scan>
+
+	<!-- 创建bean的方式来完成jdbc的数据库属性文件的使用 -->
+
+	<bean	class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:database.properties"></property>
+	</bean>
+
+<!-- 写在这里也行,或者引入 -->
+<import resource="mybatis-Config.xml"/>
+
+</beans>
+```
+> springmvc.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<!-- 扫描注解控制器 -->
+	<context:component-scan base-package="com.etc.controller" />
+
+	<!-- SpringMVC环境设置 -->
+	<mvc:annotation-driven conversion-service="myConversionService">
+		<!-- ajax中文乱码问题 -->
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<!-- 日期格式转换 ：Ajax读日期格式转换-->
+			<bean
+				class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json</value>
+					</list>
+				</property>
+				<property name="features">
+					<list>
+						<!-- FastJSON的Date格式转换器 -->
+						<value>WriteDateUseDateFormat</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 自定义字符串日期格式转换：表单提交到SpringMVC自动绑定格式 -->
+	
+
+	<!-- 配置多视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="favorParameter" value="true" />
+		<property name="defaultContentType" value="text/html" />
+		<property name="mediaTypes">
+			<map>
+				<entry key="html" value="text/html;charset=UTF-8" />
+				<entry key="json" value="application/json;charset=UTF-8" />
+				<entry key="xml" value="application/xml;charset=UTF-8" />
+			</map>
+		</property>
+		<property name="viewResolvers">
+			<list>
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="prefix" value="/WEB-INF/jsp/" />
+					<property name="suffix" value=".jsp"></property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- SpringMVC静态资源引用 -->
+	<mvc:resources location="/statics/" mapping="/statics/**" />
+
+	<!-- SpringMVC全局异常处理 -->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.RuntimeException">syserror</prop>
+				<!-- syserror：错误信息导航逻辑视图 ，显示异常信息 -->
+				<!-- 可以定义多个异常 -->
+			</props>
+		</property>
+	</bean>
+
+	<!-- 配置MultipartResolver，用于上传文件，使用spring的CommonMultipartResolver -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 上传文件大小，单位为字节 -->
+		<property name="maxUploadSize" value="500000" />
+		<!-- 请求编码格式，设置为和jsp页面编码格式一致，确保SpringMVC正确读取表单内容 -->
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+</beans>
+```
+
+> mybatis-config.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+		
+		
+		
+ <!-- 配置数据源，以前用的是dbcp ,现在使用的是alibaba的Druid(德鲁伊)数据源 -->
+    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+       <property name="driverClassName" value="${jdbc_driver}" />
+        <property name="url" value="${jdbc_url}" />
+        <property name="username" value="${jdbc_username}" />
+        <property name="password" value="${jdbc_password}" />
+        
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="0" />
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="20" />
+        <!-- 连接池最大空闲 -->
+       <!--  <property name="maxIdle" value="20" /> -->
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="0" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="25200000" />
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="true" />
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="1800" />
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="true" />
+        <!-- 监控数据库 -->
+        <!-- <property name="filters" value="stat" /> -->
+        <property name="filters" value="mergeStat" />
+    </bean>
+    
+ 
+    <!-- 配置sqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 实例化sqlSessionFactory时需要使用上述配置好的数据源以及SQL映射文件 -->
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath:com/xlx/jdbc/dao/*.xml" />
+    </bean>
+    <!-- 配置扫描器 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描me.gacl.dao这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="com.xlx.jdbc.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+    
+   <!-- 配置Spring的事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 注解方式配置 事务-->
+    <tx:annotation-driven transaction-manager="transactionManager" /> 
+    
+    <!-- 配置druid监控spring jdbc -->
+    <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+    </bean>
+    <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>com.xlx.jdbc.service.*</value>
+            </list>
+        </property>
+    </bean>
+    <aop:config>
+        <aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />
+    </aop:config>
+</beans>
+```
+### 3.properties属性文件
+> db.properties
+```properties
+# key =value形式,注意末尾不能有空格哦
+driver=com.mysql.jdbc.Driver
+url=jdbc:mysql://localhost:3306/smbms?useUnicode=true&characterEncoding=utf8
+username=mango
+password=root5.7.22
+
+```
