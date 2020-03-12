@@ -24,12 +24,13 @@
   + 掌握 `Thymeleaf`,`Jsp`
 + 框架技能 
   + 掌握`Spring` 
-  + 掌握` SpringMVC`,`Mybatis`,`Shiro`
-  + 掌握 `Maven` 管理
-  + 掌握 `SpringBoot`
-  + 熟悉`MybatisPlus`
+  + 掌握`SpringMVC`,`Mybatis`,`Shiro`
+  + 掌握`Maven`
+  + 掌握`SpringBoot`
+  + 掌握`Hibernate-Validation`
+  + 熟悉`MyBatisPlus`
 + 数据库技能 
-  + 掌握`Mysql`
+  + 掌握`MySQL`
   + 熟悉`Oracle`
   + 会用`Redis`
 + 其他技能 
@@ -47,6 +48,7 @@
 
 ### smbms
 **项目介绍** :  主要是基于 Maven 管理的 SSM 架构,实现基本登录拦截,密码加密, 数据分页处理等功能
+
 **使用技术** : `Spring`, `SpringMVC`,` Mybatis`, `Maven`, `Log4j`,`Thymeleaf`/`JSP` , `MySQL`
 
 **源码** : [https://gitee.com/XielinXG/smbms](https://gitee.com/XielinXG/smbms "gitee")
