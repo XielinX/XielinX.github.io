@@ -12,7 +12,7 @@
 4. 一对多,多对一的关系
 5. 动态SQL(重要)
 6. 缓存
-## 表关联的**一对多**,<collection></collection>
+## 一、表关联的**一对多**,<collection></collection>
 > pojo类: User,Posts
 ```java
 public class User{
@@ -46,7 +46,7 @@ public class Posts{
 </resultMap>
 ```
 
-## 表关联的**多对一**,<association></association>
+## 二、表关联的**多对一**,<association></association>
 > pojo类
 ```java
 public class Posts{
@@ -72,7 +72,7 @@ public class Posts{
 </resultMap>
 ```
 
-## 动态SQL语句
+## 三、动态SQL语句
 + `if`
   
   > 场景:有条件判断
@@ -218,7 +218,7 @@ where id=#{id}
 User findById(@Param("id") long id);
 ```
 
-## Mybatis缓存
+## 四、Mybatis缓存
 + 缓存作用: 合理使用缓存是常见的优化手段,将从数据库中查询的数据放入缓存中,下次使用时不必再次查询,直接从缓存中取出,避免频繁的操作数据库,减轻数据库的压力,提高性能
 
 + mybatis缓存
@@ -283,7 +283,7 @@ sqlSession执行commit，即增删改操作时会清空缓存。这么做的目�
 ```java
   public class User implements Serializable {}
 ```
-## 总结
+### 总结
 + 对于查询多commit少且用户对查询结果实时性要求不高，此时采用mybatis二级缓存技术降低数据库访问量，提高访问速度
 
 + 二级缓存是建立在同一个namespace下的，如果对表的操作查询可能有多个namespace，那么得到的数据就是错误的
@@ -294,3 +294,119 @@ sqlSession执行commit，即增删改操作时会清空缓存。这么做的目�
 
   **②对关联表的查询,关联的所有表的操作都必须在同一个namespace。**
 
+## 五、代码自动生成 
+### 1.需要的jar包
+```xml
+<dependency>
+    <groupId>org.mybatis.generator</groupId>
+    <artifactId>mybatis-generator-core</artifactId>
+    <version>1.4.0</version>
+</dependency>
+
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>5.1.48</version>
+</dependency>
+
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.5.4</version>
+</dependency>
+
+```
+### 2. 自动生成配置文件
+> mybatis-generator.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!-- 属性按顺序写入,maven命令: mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate -->
+
+
+    <!-- 导入属性配置 -->
+    <properties resource="application.properties"/>
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+
+        <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--jdbc的数据连接,从配置文件读取 -->
+        <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+        </jdbcConnection>
+
+        <!-- 可选,类型处理器,在数据库类型和java类型之间的转换控制 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- Model模型生成器,pojo类
+	    	targetPackage:pojo类所在的包全名
+	    	targetProject:pojo类所在项目下的路径
+	    -->
+        <javaModelGenerator targetPackage="com.xlx.majiang.entity" targetProject="src/main/java">
+            <!-- 是否允许子包,targetPackage.xxx.xx -->
+            <property name="enableSubPackages" value="true"/>
+            <!-- 是否对类CHAR类型的列进行trim操作 -->
+            <property name="trimStrings" value="true"/>
+            <!-- 是否可以改变,即pojo类对象不会有setter方法,只有构造 -->
+            <property name="immutable" value="false"/>
+        </javaModelGenerator>
+
+
+        <!-- 为每一个数据库表生成sqlMap.xml映射文件
+        	targetPackage:sqlMap映射文件所在包名
+        	targetProject:sqlMap映射文件所在项目路径
+        -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+
+        <!-- 客户端代码，生成易于使用的针对Model对象和XML配置文件 的代码
+        	type="ANNOTATEDMAPPER",生成Java Model 和基于注解的Mapper对象
+            type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
+            type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
+
+            targetPackage:接口所在包名
+        	targetProject:接口所在项目路径
+         -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.xlx.majiang.dao"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!-- 要生成的表 tableName:数据库中的表名或视图名
+        	domainObjectName:pojo类名
+        	enableXxxByExample:是否要生成对应的Example
+         -->
+        <table tableName="user" domainObjectName="User"></table>
+        <table tableName="question" domainObjectName="Question"></table>
+        <table tableName="comment" domainObjectName="Comment"></table>
+        <table tableName="notification" domainObjectName="Notification"></table>
+    </context>
+</generatorConfiguration>
+```
+### 3.运行
+#### 3.1Eclipse IDE
+![Eclise Maven Builder](./mybatis-generator.png "mybatis-generator")
+#### 3.2 Dos命令
+打开dos命令窗口,cd到mybatis-generator-core-1.3.5.jar的路径下,再运行下面命令:
+
+> java  -jar  mybatis-generator-core-1.3.5.jar   -configfile    generatorConfig.xml    -overwrite

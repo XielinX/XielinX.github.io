@@ -344,12 +344,22 @@ public void sayHello(@ModelAttribute("ma") String str){
 </beans>
 ```
 ### 3.properties属性文件
-> db.properties
+> 数据库配置 db.properties
 ```properties
 # key =value形式,注意末尾不能有空格哦
 driver=com.mysql.jdbc.Driver
 url=jdbc:mysql://localhost:3306/smbms?useUnicode=true&characterEncoding=utf8
 username=mango
 password=root5.7.22
-
 ```
+> 日志配置 log4j.properties
+
+### 4. 使用MyBatis的自动生成
+MyBatis的自动生成entity,dao,mapper(xml)
+### 5. 测试
+#### 5.1 Springc测试
+#### 5.2 MyBatis测试
+### 6.添加Tomacat容器 
+### 7. 运行
+
+
