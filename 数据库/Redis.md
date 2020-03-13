@@ -2,7 +2,7 @@
 [^redis]:[REmote DIctionary Server],远程字典服务器,Redis 是完全开源免费的，遵守BSD协议，是一个高性能的key-value形式的NoSQL数据库
 
 
-## NoSQL[^no]
+## 一、NoSQL[^no]
 [^no]:not only sql
 
 + CA**P**原理:一个分布式系统不可能同时满足一致性,可用性,**分区容错性**这三个需求,最多满足2个
@@ -13,13 +13,13 @@
   + CA:单点集群,满足一致性,可用性的系统,扩展性不强,如Oracle
   + CP:满足一致性,分区容错性的系统,性能不是特别高,如Redis,MangoDB
   + AP:满足可用性,分区容错性的系统,一致性要求低,如大多数网站架构
-## Redis的安装
+## 二、Redis的安装
 + 下载地址：[https://github.com/microsoftarchive/redis/releases](https://github.com/microsoftarchive/redis/releases "点击下载")
-## Redis的使用
+## 三、Redis的使用
 + Redis数据库有16个[索引:0-15]
 
-## Redis的数据类型
-### **键(Key)**
+## 四、Redis的数据类型
+### 4.1 **键(Key)**
 + `dbsize`: 统计数据库里数据个数
 + `select n`:连接第(n+1)个数据库
 + `flushdb`:清空当前数据库
@@ -33,7 +33,7 @@
 + `type key`:查看key对应的数据类型
 + `move key db_index`:将key转移到指定数据库,如: move name 2
 + `exists key`:查询key是否存在,1:存在;0:不存在
-### 字符串(String)
+### 4.2 字符串(String)
 + `append key val`:在key对应的value后面追加val,如,append name 123,结果为zhangsan123
 + `strlen key`: key对应的value长度
 + `incr key`: key对应的value(value是数字)自增1
@@ -48,7 +48,7 @@
 + `mget k1 k2 k3...`:**一次获取多个对应的v值**
 + `msetnx k4 v4 k5 v5..`:带判断(**都不存在时有效**)一次设置多个k-v, 
 + `getset key newValue`: 先get在set,返回结果为旧值(get)
-### 列表(List): List\<E\>
+###  4.3列表(List): List\<E\>
 + `lpush key value1,value2...`: 将一个或多个值插入到列表头部,倒序输出
 + `rpush key value1,value2...`:在列表中添加一个或多个值,按正常顺序进出
 + `lrange key start end`:集合输出,**lpush元素倒序输出**(类似栈先进后出) ,start/end: 0:第一个;1:第二个;-1:最后一个;-2:倒数第二个
@@ -61,7 +61,7 @@
 + `rpoplpush k1 k2`:先将k1执行rpop,再将出栈的元素lpush到k2
 + `lset key index value`: 对指定索引元素赋值
 + `linsert key before/after key1 newKey`:在集合元素key1前/后插入值newKey
-### 集合(Set): Set\<E\>
+### 4.4集合(Set): Set\<E\>
 + `sadd key value1 value2 ...`: **集合key添加多个元素**
 + `smembers key`:**集合输出**
 + `scard key`: 统计集合个数
@@ -71,7 +71,7 @@
 + `smove key1 key2 value`:把集合key1的元素value移动到集合key2去
 + `inter key1 key2`:集合的交集(会去重),类似mysql的inner join语法
 + `diff key1 key2`: 集合的差集,key1为参考,在key1中key2没有的元素,如,看k1:[a b c] k2:[1 a] 差集:b c
-### 哈希(Map):Map<String,Object>
+### 4.5哈希(Map):Map<String,Object>
 + `hset key value[k-v]`: **哈希新增一个键值对,map.put(key,value)**
 + `hget key value[k]`:**依靠键获取哈希的值,value = map.getValue(key)**
 + `hmset key v1[k1-v1] v2[k2-v2]..`:**设置多个键值对**
@@ -85,7 +85,7 @@
 + `hincrby key value[k] integer`: 对哈希值为整数的值进行加法操作,加数也要整数
 + `hincrbyfloat key value[k] increment`:对哈希值为数值的值执行浮点型加法
 + `hsetnx key value[k-v]`:键不存在才插入
-### 有序集合(Sorted set)
+### 4.6有序集合(Sorted set)
 + `zadd key [score1] member1 [score2] member2...`:**新增可带分数的有序集合元素**
 + `zrange key start end (withscore)`: **带分数的输出,0:表是第一个元素,1:第二个,-1:最后一个;-2:倒数第二**
 + `zrangebyscore member min max`:按分数范围输出[min,max]
@@ -99,10 +99,10 @@
 + `zrevrank key member`:按分数从大到小返回该成员的排名
 + `zrevrange key start end (withscore)`:返回有序集中指定区间内的成员，通过索引，分数从高到底排序
 + `zrevrangebyscore key max min [WITHSCORES] [LIMIT offset count]`:按指定分数区间返回成员,可带分数,分页
-## Redis的配置
+## 五、Redis的配置
 + 备份最初未修改文件redis.conf
 + 使用备份文件
-### redis.conf配置文件
+### 5.1 redis.conf配置文件
 + includes: 包含多个配置文件,类似spring整合框架的多xml配置
 + modules: 多模块配置,启动时就加载
 + network: 网络绑定,多用户连接
@@ -135,7 +135,7 @@
   + no-appendfsync-on-rewrite no: 默认重写时不使用appendfsync(追加方式),保证数据完整
   + auto-aof-rewrite-percentage 100: 设置重写的要求,默认是上次重写文件大小1倍(至少)
   + auto-aof-rewrite-min-size 64mb:设置重写的要求,默认当期文件大于64M
-### Maxmemory-policy缓存策略
+### 5.2 Maxmemory-policy缓存策略
 + volatitle-lru:使用LRU算法移除设置了过期时间的key
 + allkeys-lru:LRU算法移除所有key
 + volatile-random:使用LRU算法移除随机的设置了过期时间的key
@@ -146,8 +146,8 @@
 + `config get *`:查看所有的配置信息
 + `config set 配置名称 值`:设置某个配置的值,如设置密码:config set requirepass "123"
 
-## 持久化
-###  RDB: 
+## 六、持久化
+###  6.1 RDB: 
 + Redis DataBase(redis数据库)
 + dump.rdb文件保存(在设置时间内,改变n次后就会保存一个dump.rdb) 
 + 备份:在另一个机器上备份 `cp dump.rdb dum_bak.rdb`
@@ -155,7 +155,7 @@
 + 优点: ①适合大规模数据恢复,②对数据的一致性,完整性要求不高
 + 缺点:①间隔时间内备份,如果发生意外,会丢失最后一次快照修改的所有数据②fork大数据量会增加性能消耗
 + `redis-cli config set save ""`:动态停止所有rdb保存
-### AOF
+### 6.2 AOF
 + Append Only File(仅日志文件追加)
 + `appendonly yes`:redis.conf配置中启用持久化
 + apppendonly.aof:默认存储文件
@@ -167,7 +167,7 @@
 + 优点: 参考追加方式appendfsync
 + 缺点:①相同数据集下,aof文件要大于rdb,恢复速度慢于rdb② aof运行效率低于rdb,everysec策略较好,no策略效率与rdb相同
 + 以日志形式保存写操作命令,只在后面追加,恢复时只执行
-## Redis的事务
+## 七、Redis的事务
 + 事务:批量执行多个命令,命令是原子性,事务不是,部分支持
 + `multi`:事务开始标志
 + `exec`:执行
@@ -184,13 +184,13 @@
 + 悲观锁
   + 悲观的认为每次读数据都会有人修改,每次读数据时会加锁,其他线程都阻塞,直到获得锁
 + CAS:check and set
-## Redis发布订阅
+## 八、Redis发布订阅
 + `subscribe channel..`:订阅一个或多个频道
 + `unsubscribe channel..`指退订给定的频道。
 + `psubscribe pattern..`:订阅一个或 多个**给定模式**的频道
 + `punsubscribe pattern..`:退订所有**给定模式**的频道
 + `publish channel message`:将消息发送个指定频道
-## Redis主从复制/读写分离
+## 九、Redis主从复制/读写分离
 + 主机(master)/ 从机(slave)关系:
   + ①一主多从:master [slave1,slave2,..]
   + ②薪火相传: master[slave1(m2),slave2,..] 
@@ -205,7 +205,7 @@
 + `slave no one`:master关机,在slave中选master
 + `salveof host port`:选择作为master
 + `info replication`:查看日志信息
-## Redis常用命令
+## 十、Redis常用命令
 + `redis-server redis.conf`:启动服务端
 + `redis-cli`:启动客户端
 + `ps -ef|grep redis`或`lsof -i : 6379`:检测redis启动
