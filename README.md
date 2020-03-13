@@ -1,9 +1,9 @@
 # 个人简历
 ## 个人信息
-+ 谢林祥/男/江西
++ ***/男/江西
 + 大专/南昌师范学院/计算机应用技术2015-2018
 + 工作年限 : 2年	
-+ 联系方式 : `MTc3Nzk2Nzg5MzI=`
++ 联系方式 : 
 + 邮箱 : [perfectxlx@gmail.com](perfectxlx@gmail.com)	
 + GitHub : [https://github.com/XielinX](https://github.com/XielinX "github")
 + 求职意向 : Java开发工程师
