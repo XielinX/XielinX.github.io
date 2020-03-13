@@ -195,6 +195,36 @@ Java内存模型的: 可见性,原子性,有序性
 
 + 原子性
 只能保证对单次读/写的原子性。i++ 这种操作不能保证原子性。
+
+## 四、ThreadLocal
+多个线程对一个变量进行写入的时候，为了保证线程安全,一般需要使用同步措施
+ThreadLocal是除了加锁这种同步方式之外的一种保证一种规避多线程访问出现线程不安全的方法,
+创建一个变量时,当每一个线程都去访问时,访问的是自己的线程变量(本地副本)
+线程本地变量
+
+ThreadLocal类,它提供线程本地变量，如果创建一乐ThreadLocal变量，那么访问这个变量的每个线程都会有这个变量的一个副本
+### 1.1 使用
+```java
+public class ThreadLocalDemo {
+   
+public static void main(String[] args) {
+     ThreadLocal<String> threadLocal = new ThreadLocal<>();
+     // public void set(T value);
+     threadLocal.set("localVar1")
+     // public T get();
+     String str = threadLocal.get();
+     // public void remove();
+     threadLocal.remove();
+     
+  }
+
+}
+```
+
+
+
+
+
 ## JVM
 ### 指令集
 ### 寄存器
