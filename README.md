@@ -22,7 +22,7 @@
 + 掌握各种开发与集成工具的使用，如 `Maven`,`Git`/`SVN` 等
 + 掌握`MySQL`数据库
 + 会用`Redis`
-+ 掌握前端基本知识,如`Javascript`,`JQuery`,`BootStrap`
++ 掌握前端基本知识,如`Javascript`,`jQuery`,`BootStrap`
 ## 个人开源项目
 ### MJ-Community
 **项目描述** : 仿Elastic中文社区的模式项目,提问,回答,评论,消息通知
