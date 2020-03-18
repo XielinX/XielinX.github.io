@@ -220,9 +220,102 @@ public static void main(String[] args) {
 
 }
 ```
+## 五、多线程
+### 相关概念
++ 进程
+操作系统中,一个应用程序就代表一个进程,进程之间是独立的资源与空间
 
++ 线程
+线程是进程的组成部分,一个进程可以有多个线程,一个线程必须有一个父进程,线程可以独立运行,可以共享内存
+### 生命周期
++ 创建状态(new)
++ 就绪状态(runnable)
++ 运行状态(running)
++ 阻塞状态(blocked)
++ 死亡状态(dead)
+### 多线程创建
+#### 3种创建方式
+> 1. 继承Thread类
+```java
+public class MyThread extends Thread {
+    
+    
+    @Override
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println("线程:" +  getName() + ":" + i);
+        }
+    }
+    
+    public static void main(String[] args) {
+        MyThread t1 = new MyThread();
+        MyThread t2 = new MyThread();
+    
+        t1.start();
+        t2.start();
+  }
+}
+```
+> 2. 实现Runnable接口
+```java
+public class MyRunnable implements Runnable {
+       
+    @Override
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println("线程:" + Thread.currentThread().getName() + "---->" + 1);
+        }
+    }
+    
+    public static void main(String[] args) {
+        MyThread t1 = new MyThread();
+        MyThread t2 = new MyThread();
+        
+        t1.start();
+        t2.start();
+        
+    }
+}
+```
 
-
+> 3. 实现Callable\<E>接口,再使用FutureTask\<E>类包装Callable对象
+```java
+public class ThirdThread implements Callable<Integer> {
+    
+    @Override
+    public Integer call() throws Exception {
+        int i = 0;
+        for (;  i < 100; i++) {
+            System.out.println(Thread.currentThread().getName()+ " 的i值:" + i);
+        }
+        return i;
+    }
+    
+    public static void main(String[] args) {
+        ThirdThread t3 = new ThirdThread();
+        // FutureTask<E>类包装Callable对象
+        FutureTask<Integer> futureTask = new FutureTask<>(t3);
+        for (int i = 0; i < 100; i++) {
+            System.out.println(Thread.currentThread().getName()+ " 的i值:" + i);
+            if (i == 20){
+                new Thread(futureTask,"有返回值得线程").start();
+            }
+        }
+        
+     try {
+            // 获取返回值
+            System.out.println("子线程得返回值:" + futureTask.get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }   
+```
+#### 3种创建方式比较
++ 使用start()方法启动线程,这样run()方法就是一个线程执行体,不能直接调用run()方法,否则就相当于调用一个函数而已
++ 继承Thread类,参考类的单继承,接口多继承
++ Runnable是接口,run()方法是public void 得
++ Callable\<E>是接口,call()方法是有返回值,会抛出异常
 
 
 ## JVM
